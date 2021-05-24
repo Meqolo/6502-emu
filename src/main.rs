@@ -7,7 +7,6 @@ mod mem;
 use mem::*;
 
 mod testfunctions;
-use testfunctions::*;
 
 fn main() {
     let mut memory = Memory {
@@ -21,11 +20,9 @@ fn main() {
         register_x: 0,
         register_y: 0,
         processor_status: 0,
-        // memory: &mut memory,
     };
 
     processor.reset(&mut memory);
-    // processor.set_status(ProcessorStatus::DecimalMode, true);
     memory.data[0xFFFC] = opcodes::JSR;
     memory.data[0xFFFD] = 0x42;
     memory.data[0xFFFE] = 0x42;
@@ -35,15 +32,13 @@ fn main() {
     processor.execute(&mut memory, 0);
 
     println!("{:X}", processor);
-    // println!("{}", processor.stack_pointer);
-    // println!("{:?}", memory.data);
-    // println!("{:?}", memory.data[0x4242]);
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::testfunctions::{jsr::JsrTests, lda::LDATests};
+    use crate::testfunctions::{jsr::JsrTests, lda::LDATests, ldx::LDXTests, ldy::LDYTests};
+    use testfunctions::*;
 
     // #[test]
     // // fn jsr_test() {
@@ -108,4 +103,24 @@ mod tests {
     fn lda_indirect_y_overflow() {
         lda::Test::indirect_y_overflow()
     }
+
+    // #[test]
+    // fn ldx_immediate_test() {
+    //     ldx::Test::immediate();
+    // }
+
+    // #[test]
+    // fn ldx_zero_page() {
+    //     ldx::Test::zero_page();
+    // }
+
+    // #[test]
+    // fn ldy_immediate_test() {
+    //     ldy::Test::immediate();
+    // }
+
+    // #[test]
+    // fn ldy_zero_page() {
+    //     ldy::Test::zero_page();
+    // }
 }
