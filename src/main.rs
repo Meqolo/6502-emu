@@ -45,11 +45,10 @@ mod tests {
     use super::*;
     use crate::testfunctions::{jsr::JsrTests, lda::LDATests};
 
-    #[test]
-    fn jsr_test() {
-        jsr::Test::equality();
-    }
-
+    // #[test]
+    // // fn jsr_test() {
+    // //     jsr::Test::equality();
+    // // }
     #[test]
     fn lda_immediate_test() {
         lda::Test::immediate();

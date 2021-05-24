@@ -133,7 +133,7 @@ impl LDATests for Test {
         memory.data[0xFFFE] = 0x44; // 0x4480
         memory.data[0x4480] = 0x84;
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,
@@ -161,7 +161,7 @@ impl LDATests for Test {
         memory.data[0xFFFE] = 0x44; // 0x4480
         memory.data[0x4481] = 0x84;
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,
@@ -189,7 +189,7 @@ impl LDATests for Test {
         memory.data[0xFFFE] = 0x44; // 0x4480
         memory.data[0x4501] = 0x84;
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,
@@ -217,7 +217,7 @@ impl LDATests for Test {
         memory.data[0xFFFE] = 0x44; // 0x4480
         memory.data[0x4481] = 0x84;
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,
@@ -245,7 +245,7 @@ impl LDATests for Test {
         memory.data[0xFFFE] = 0x44; // 0x4402
         memory.data[0x4501] = 0x84; // 0x4402 + 0xFF crosses page boundary
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,
@@ -274,7 +274,7 @@ impl LDATests for Test {
         memory.data[0x0007] = 0x80;
         memory.data[0x8000] = 0x84;
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,
@@ -303,7 +303,7 @@ impl LDATests for Test {
         memory.data[0x0003] = 0x80;
         memory.data[0x8004] = 0x84; // 0x8000 + 0x4
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,
@@ -332,7 +332,7 @@ impl LDATests for Test {
         memory.data[0x0003] = 0x80;
         memory.data[0x8101] = 0x84; // 0x8002 + 0xFF
 
-        let cycles = processor.execute(&mut memory, 4);
+        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
 
         assert_eq!(
             processor.accumulator, 0x84,

@@ -41,9 +41,10 @@ pub trait Functions {
 
     fn reset(&mut self, memory: &mut Memory) -> ();
     fn fetch_byte(&mut self, memory: &Memory, cycles: &mut u32) -> u8;
-    fn read_byte(&mut self, memory: &Memory, cycles: &mut u32, address: u32) -> u8;
+    fn read_byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u8;
 
     fn fetch_2byte(&mut self, memory: &Memory, cycles: &mut u32) -> u16;
+    fn read_2byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u16;
 
     fn execute(&mut self, memory: &mut Memory, cycles: u32) -> i64;
 }
@@ -95,33 +96,43 @@ impl Functions for Processor {
         self.program_counter += 1;
 
         data |= (memory.data[self.program_counter as usize] as u16) << 8;
-        data = data.swap_bytes();
+        data = data.to_le();
         self.program_counter += 1;
 
         *cycles -= 2;
         return data;
     }
 
-    fn read_byte(&mut self, memory: &Memory, cycles: &mut u32, address: u32) -> u8 {
+    fn read_byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u8 {
         let data: u8 = memory.data[address as usize];
         *cycles -= 1;
         return data;
     }
 
+    fn read_2byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u16 {
+        let low_byte: u8 = self.read_byte(memory, cycles, address);
+        let high_byte: u8 = self.read_byte(memory, cycles, address + 1);
+        return low_byte as u16 | ((high_byte as u16) << 8);
+    }
+
     fn execute(&mut self, memory: &mut Memory, mut cycles: u32) -> i64 {
         let origin_cycles: u32 = cycles.clone();
 
-        'outer: while cycles > 0 {
+        while cycles > 0 {
             let instruction: u8 = self.fetch_byte(&memory, &mut cycles);
 
             match instruction {
                 LDA_IMMEDIATE => self.lda_immediate(&memory, &mut cycles),
                 LDA_ZERO_PAGE => self.lda_zero_page(&memory, &mut cycles),
                 LDA_ZERO_PAGE_X => self.lda_zero_page_x(&memory, &mut cycles),
+                LDA_ABSOLUTE => self.lda_absolute(&memory, &mut cycles),
+                LDA_ABSOLUTE_X => self.lda_absolute_x(&memory, &mut cycles),
+                LDA_ABSOLUTE_Y => self.lda_absolute_y(&memory, &mut cycles),
+                LDA_INDIRECT_X => self.lda_indirect_x(&memory, &mut cycles),
+                LDA_INDIRECT_Y => self.lda_indirect_y(&memory, &mut cycles),
                 JSR => self.jsr_absolute(memory, &mut cycles),
                 _ => {
-                    println!("Unknown instruction {:#X}", instruction);
-                    break 'outer;
+                    panic!("Unknown instruction {:#X}", instruction)
                 }
             }
         }
