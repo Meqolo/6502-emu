@@ -19,8 +19,8 @@ impl JumpToSubroutine for Processor {
         let sub_addr: u16 = self.fetch_2byte(memory, cycles);
         memory.write_2byte(self.program_counter - 1, self.stack_pointer, cycles);
         self.program_counter = sub_addr;
-        self.stack_pointer += 1;
+        self.stack_pointer += 2;
 
-        *cycles -= 2;
+        *cycles -= 1;
     }
 }

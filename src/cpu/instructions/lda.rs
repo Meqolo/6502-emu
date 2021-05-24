@@ -22,13 +22,15 @@ impl LoadAccumulator for Processor {
     }
 
     fn lda_zero_page(&mut self, memory: &Memory, cycles: &mut u32) -> () {
-        let zero_page_addr = self.fetch_byte(&memory, cycles);
+        let zero_page_addr: u8 = self.fetch_byte(&memory, cycles);
         self.accumulator = self.read_byte(&memory, cycles, zero_page_addr as u32);
+
         self.lda_set_flags();
     }
     fn lda_zero_page_x(&mut self, memory: &Memory, cycles: &mut u32) -> () {
-        let mut zero_page_addr = self.fetch_byte(&memory, cycles);
-        zero_page_addr += self.register_x;
+        let mut zero_page_addr: u8 = self.fetch_byte(&memory, cycles);
+        zero_page_addr = zero_page_addr.wrapping_add(self.register_x);
+
         *cycles -= 1;
         self.accumulator = self.read_byte(&memory, cycles, zero_page_addr as u32);
         self.lda_set_flags();

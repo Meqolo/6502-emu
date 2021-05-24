@@ -45,7 +45,7 @@ pub trait Functions {
 
     fn fetch_2byte(&mut self, memory: &Memory, cycles: &mut u32) -> u16;
 
-    fn execute(&mut self, memory: &mut Memory, cycles: u32) -> ();
+    fn execute(&mut self, memory: &mut Memory, cycles: u32) -> i64;
 }
 
 impl Functions for Processor {
@@ -108,8 +108,10 @@ impl Functions for Processor {
         return data;
     }
 
-    fn execute(&mut self, memory: &mut Memory, mut cycles: u32) -> () {
-        while cycles > 0 {
+    fn execute(&mut self, memory: &mut Memory, mut cycles: u32) -> i64 {
+        let origin_cycles: u32 = cycles.clone();
+
+        'outer: while cycles > 0 {
             let instruction: u8 = self.fetch_byte(&memory, &mut cycles);
 
             match instruction {
@@ -117,8 +119,14 @@ impl Functions for Processor {
                 LDA_ZERO_PAGE => self.lda_zero_page(&memory, &mut cycles),
                 LDA_ZERO_PAGE_X => self.lda_zero_page_x(&memory, &mut cycles),
                 JSR => self.jsr_absolute(memory, &mut cycles),
-                _ => println!("Unknown instruction {:#X}", instruction),
+                _ => {
+                    println!("Unknown instruction {:#X}", instruction);
+                    break 'outer;
+                }
             }
         }
+
+        let cycles_used: i64 = origin_cycles as i64 - cycles as i64;
+        return cycles_used;
     }
 }
