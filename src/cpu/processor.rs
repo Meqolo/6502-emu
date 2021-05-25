@@ -68,7 +68,6 @@ impl Functions for Processor {
         let sp_addr: u16 = self.stack_pointer_to_address() - 1;
         self.write_word(memory, self.program_counter - 1, sp_addr);
         self.stack_pointer -= 2;
-        self.cycles -= 1;
     }
 
     fn stack_pointer_to_address(&mut self) -> u16 {
@@ -78,6 +77,7 @@ impl Functions for Processor {
     fn pop_word_from_stack(&mut self, memory: &mut Memory) -> u16 {
         let sp_addr: u16 = self.stack_pointer_to_address() + 1;
         self.stack_pointer += 2;
+        self.cycles -= 1;
         return self.read_word(memory, sp_addr);
     }
 
@@ -205,6 +205,8 @@ impl Functions for Processor {
 
                 JSR => self.jsr(memory),
                 RTS => self.rts(memory),
+                JMP_ABSOLUTE => self.jump_absolute(memory),
+                JMP_INDIRECT => self.jump_indirect(memory),
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return origin_cycles as i64 - self.cycles as i64;

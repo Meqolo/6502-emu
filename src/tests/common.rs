@@ -97,3 +97,11 @@ pub fn verify_memory(memory: &Memory, address: u16, expected: u8) -> () {
         address, memory.data[address as usize], expected
     );
 }
+
+pub fn verify_program_counter(processor: &Processor, expected: u16) -> () {
+    assert_eq!(
+        processor.program_counter, expected,
+        "Program counter is equal to {:#X} when it should equal {:#X}",
+        processor.program_counter, expected
+    );
+}

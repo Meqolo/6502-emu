@@ -1,24 +1,20 @@
 // obelisk.me.uk/6502
-
 mod cpu;
-use cpu::{opcodes, processor::*};
-
 mod mem;
-use mem::*;
-
 mod tests;
 
 use crate::tests::registers::*;
+use mem::*;
 
-use load::lda::{self, LDATests};
-use load::ldx::{self, LDXTests};
-use load::ldy::{self, LDYTests};
+use load::lda::{self, *};
+use load::ldx::{self, *};
+use load::ldy::{self, *};
 
-use store::sta::{self, STATests};
-use store::stx::{self, STXTests};
-use store::sty::{self, STYTests};
+use store::sta::{self, *};
+use store::stx::{self, *};
+use store::sty::{self, *};
 
-use crate::tests::jumps::{self, JumpTests};
+use crate::tests::jumps::{self, *};
 
 fn main() {
     // Rust inbuilt tests not used as they clutter the output and are hard to read if a test fails
@@ -91,6 +87,13 @@ fn main() {
     println!("STY ABSOLUTE      PASSED");
     println!("      STY FULL PASS \n");
 
-    jumps::Test::jump_subroutine_original();
-    println!("JUMP THEN RETURN  PASSED");
+    jumps::Test::jump_subroutine_return();
+    println!("JSR THEN RETURN   PASSED");
+    jumps::Test::jump_subroutine();
+    println!("JSR ONLY          PASSED");
+    jumps::Test::jump_absolute();
+    println!("JMP ABSOLUTE      PASSED");
+    jumps::Test::jump_indirect();
+    println!("JMP INDIRECT      PASSED");
+    println!("     JUMPS FULL PASS \n");
 }

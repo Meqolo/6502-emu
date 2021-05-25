@@ -54,3 +54,5 @@ pub const STX_ABSOLUTE: u8 = 0x8E;
 
 pub const JSR: u8 = 0x20;
 pub const RTS: u8 = 0x60;
+pub const JMP_ABSOLUTE: u8 = 0x4C;
+pub const JMP_INDIRECT: u8 = 0x6C;
