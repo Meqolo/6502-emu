@@ -1,39 +1,39 @@
 use super::storeregisters::*;
 use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
-use crate::test::common::*;
+use crate::tests::common::*;
 
 pub struct Test {}
 
-pub trait STXTests {
+pub trait STYTests {
     fn zero_page() -> ();
-    fn zero_page_y() -> ();
+    fn zero_page_x() -> ();
 
     fn absolute() -> ();
 }
 
-impl STXTests for Test {
+impl STYTests for Test {
     fn zero_page() -> () {
         let (mut memory, mut processor) = setup();
 
-        test_register_zero_page(&mut memory, &mut processor, RegisterX, STX_ZERO_PAGE);
+        test_register_zero_page(&mut memory, &mut processor, RegisterY, STY_ZERO_PAGE);
     }
 
-    fn zero_page_y() -> () {
+    fn zero_page_x() -> () {
         let (mut memory, mut processor) = setup();
 
         test_register_zero_page_register(
             &mut memory,
             &mut processor,
-            RegisterX,
-            STX_ZERO_PAGE_Y,
-            Some(RegisterY),
+            RegisterY,
+            STY_ZERO_PAGE_X,
+            Some(RegisterX),
         );
     }
 
     fn absolute() -> () {
         let (mut memory, mut processor) = setup();
 
-        test_register_absolute(&mut memory, &mut processor, RegisterX, STX_ABSOLUTE);
+        test_register_absolute(&mut memory, &mut processor, RegisterY, STY_ABSOLUTE);
     }
 }

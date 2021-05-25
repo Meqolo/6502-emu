@@ -6,134 +6,91 @@ use cpu::{opcodes, processor::*};
 mod mem;
 use mem::*;
 
-mod test;
+mod tests;
+
+use crate::tests::registers::*;
+
+use load::lda::{self, LDATests};
+use load::ldx::{self, LDXTests};
+use load::ldy::{self, LDYTests};
+
+use store::sta::{self, STATests};
+use store::stx::{self, STXTests};
+use store::sty::{self, STYTests};
+
+use crate::tests::jumps::{self, JumpTests};
 
 fn main() {
-    let mut memory = Memory {
-        data: [0; mem::MAX_MEMORY],
-    };
+    // Rust inbuilt tests not used as they clutter the output and are hard to read if a test fails
+    println!("6502 TEST SUITE");
+    lda::Test::immediate();
+    println!("LDA IMMEDIATE     PASSED");
+    lda::Test::zero_page();
+    lda::Test::zero_page_x();
+    lda::Test::zero_page_x_overflow();
+    println!("LDA ZERO PAGE     PASSED");
+    lda::Test::absolute();
+    lda::Test::absolute_x();
+    lda::Test::absolute_x_overflow();
+    lda::Test::absolute_y();
+    lda::Test::absolute_y_overflow();
+    println!("LDA ABSOLUTE      PASSED");
+    lda::Test::indirect_x();
+    lda::Test::indirect_y();
+    lda::Test::indirect_y_overflow();
+    println!("LDA INDIRECT      PASSED");
+    println!("      LDA FULL PASS \n");
 
-    let mut processor = Processor {
-        program_counter: 0,
-        stack_pointer: 0,
-        accumulator: 0,
-        register_x: 0,
-        register_y: 0,
-        processor_status: 0,
-        cycles: 0,
-    };
+    println!("LDX IMMEDIATE     PASSED");
+    ldx::Test::immediate();
+    ldx::Test::zero_page();
+    ldx::Test::zero_page_y();
+    ldx::Test::zero_page_y_overflow();
+    println!("LDX ZERO PAGE     PASSED");
+    ldx::Test::absolute();
+    ldx::Test::absolute_y();
+    ldx::Test::absolute_y_overflow();
+    println!("LDX ABSOLUTE      PASSED");
+    println!("      LDX FULL PASS \n");
 
-    processor.reset(&mut memory);
-    memory.data[0xFFFC] = opcodes::JSR;
-    memory.data[0xFFFD] = 0x42;
-    memory.data[0xFFFE] = 0x42;
-    memory.data[0x4242] = opcodes::LDA_IMMEDIATE;
-    memory.data[0x4243] = 0x84;
+    ldy::Test::immediate();
+    println!("LDY IMMEDIATE     PASSED");
+    ldy::Test::zero_page();
+    ldy::Test::zero_page_x();
+    ldy::Test::zero_page_x_overflow();
+    println!("LDY ZERO PAGE     PASSED");
+    ldy::Test::absolute();
+    ldy::Test::absolute_x();
+    ldy::Test::absolute_x_overflow();
+    println!("LDY ABSOLUTE      PASSED");
+    println!("      LDY FULL PASS \n");
 
-    processor.execute(&mut memory);
+    sta::Test::zero_page();
+    sta::Test::zero_page_x();
+    println!("STA ZERO PAGE     PASSED");
+    sta::Test::absolute();
+    sta::Test::absolute_x();
+    sta::Test::absolute_y();
+    println!("STA ABSOLUTE      PASSED");
+    sta::Test::indirect_x();
+    sta::Test::indirect_y();
+    println!("STA INDIRECT      PASSED");
+    println!("      STA FULL PASS \n");
 
-    println!("{:X}", processor);
-}
+    stx::Test::zero_page();
+    stx::Test::zero_page_y();
+    println!("STX ZERO PAGE     PASSED");
+    stx::Test::absolute();
+    println!("STX ABSOLUTE      PASSED");
+    println!("      STX FULL PASS \n");
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use test::*;
+    sty::Test::zero_page();
+    sty::Test::zero_page_x();
+    println!("STY ZERO PAGE     PASSED");
+    sty::Test::absolute();
+    println!("STY ABSOLUTE      PASSED");
+    println!("      STY FULL PASS \n");
 
-    use super::tests::registers::load;
-    use super::tests::registers::store;
-
-    use load::lda::{self, LDATests};
-    use load::ldx::{self, LDXTests};
-    use load::ldy::{self, LDYTests};
-
-    use store::sta::{self, STATests};
-    use store::stx::{self, STXTests};
-    use store::sty::{self, STYTests};
-
-    #[test]
-    fn load_accumulator() {
-        lda::Test::immediate();
-        // println!("LDA: Immediate test   ...     PASSED");
-        lda::Test::zero_page();
-        lda::Test::zero_page_x();
-        lda::Test::zero_page_x_overflow();
-        // println!("LDA: Zero page test   ...     PASSED");
-        lda::Test::absolute();
-        lda::Test::absolute_x();
-        lda::Test::absolute_x_overflow();
-        lda::Test::absolute_y();
-        lda::Test::absolute_y_overflow();
-        // println!("LDA: Absolute test    ...     PASSED");
-        lda::Test::indirect_x();
-        lda::Test::indirect_y();
-        lda::Test::indirect_y_overflow();
-        // println!("LDA: Indirect test    ...     PASSED");
-        // println!("LDA                   ...     ALL TESTS PASSED");
-    }
-
-    #[test]
-    fn load_register_x() {
-        ldx::Test::immediate();
-        // println!("LDX: Immediate test   ...     PASSED");
-        ldx::Test::zero_page();
-        ldx::Test::zero_page_y();
-        ldx::Test::zero_page_y_overflow();
-        // println!("LDX: Zero page test   ...     PASSED");
-        ldx::Test::absolute();
-        ldx::Test::absolute_y();
-        ldx::Test::absolute_y_overflow();
-        // println!("LDX: Absolute test    ...     PASSED");
-        // println!("LDX                   ...     ALL TESTS PASSED");
-    }
-
-    #[test]
-    fn load_register_y() {
-        ldy::Test::immediate();
-        // println!("LDY: Immediate test   ...     PASSED");
-        ldy::Test::zero_page();
-        ldy::Test::zero_page_x();
-        ldy::Test::zero_page_x_overflow();
-        // println!("LDY: Zero page test   ...     PASSED");
-        ldy::Test::absolute();
-        ldy::Test::absolute_x();
-        ldy::Test::absolute_x_overflow();
-        // println!("LDY: Absolute test    ...     PASSED");
-        // println!("LDY                   ...     ALL TESTS PASSED");
-    }
-
-    #[test]
-    fn store_accumulator() {
-        sta::Test::zero_page();
-        sta::Test::zero_page_x();
-        println!("STA: Zero page test   ...     PASSED");
-        sta::Test::absolute();
-        sta::Test::absolute_x();
-        sta::Test::absolute_y();
-        println!("STA: Absolute test    ...     PASSED");
-        sta::Test::indirect_x();
-        sta::Test::indirect_y();
-        println!("STA: Indirect test    ...     PASSED");
-        println!("STA                   ...     ALL TESTS PASSED");
-    }
-
-    #[test]
-    fn store_register_x() {
-        stx::Test::zero_page();
-        stx::Test::zero_page_y();
-        println!("STX: Zero page test   ...     PASSED");
-        stx::Test::absolute();
-        println!("STX: Absolute test    ...     PASSED");
-        println!("STX                   ...     ALL TESTS PASSED");
-    }
-
-    #[test]
-    fn store_register_y() {
-        sty::Test::zero_page();
-        sty::Test::zero_page_x();
-        println!("STY: Zero page test   ...     PASSED");
-        sty::Test::absolute();
-        println!("STY: Absolute test    ...     PASSED");
-        println!("STY                   ...     ALL TESTS PASSED");
-    }
+    jumps::Test::jump_subroutine_original();
+    println!("JUMP THEN RETURN  PASSED");
 }

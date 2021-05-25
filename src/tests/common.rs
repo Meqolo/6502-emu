@@ -19,7 +19,7 @@ pub fn setup() -> (Memory, Processor) {
         cycles: 0,
     };
 
-    processor.reset(&mut memory);
+    processor.reset(&mut memory, 0xFFFC);
 
     return (memory, processor);
 }

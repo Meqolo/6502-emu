@@ -31,7 +31,7 @@ impl Addressing for Processor {
     }
 
     fn addr_absolute(&mut self, memory: &Memory, offset_register: Option<Registers>) -> u16 {
-        let absolute_addr: u16 = self.fetch_2byte(memory);
+        let absolute_addr: u16 = self.fetch_word(memory);
         let absolute_addr_offset: u16;
 
         match offset_register {
@@ -52,12 +52,12 @@ impl Addressing for Processor {
         zero_page_address += self.register_x;
         self.cycles -= 1;
 
-        return self.read_2byte(memory, zero_page_address as u16);
+        return self.read_word(memory, zero_page_address as u16);
     }
 
     fn addr_indirect_y(&mut self, memory: &Memory) -> u16 {
         let zero_page_address: u8 = self.fetch_byte(memory);
-        let effective_address: u16 = self.read_2byte(memory, zero_page_address as u16);
+        let effective_address: u16 = self.read_word(memory, zero_page_address as u16);
         let effective_address_y: u16 = effective_address + self.register_y as u16;
 
         if effective_address_y - effective_address >= 0xFF {

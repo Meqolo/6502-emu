@@ -68,5 +68,6 @@ impl StoreRegister for Processor {
         let indirect_addr: u16 = self.addr_indirect_y(memory);
 
         self.write_byte(memory, self.accumulator, indirect_addr);
+        self.cycles -= 1;
     }
 }

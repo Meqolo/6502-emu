@@ -1,7 +1,7 @@
 use super::loadregisters::*;
 use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
-use crate::test::common::*;
+use crate::tests::common::*;
 
 pub struct Test {}
 

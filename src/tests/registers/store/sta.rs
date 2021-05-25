@@ -3,7 +3,7 @@ use crate::cpu::opcodes;
 use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
 use crate::cpu::processor::*;
-use crate::test::common::*;
+use crate::tests::common::*;
 
 pub struct Test {}
 

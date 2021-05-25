@@ -1,7 +1,7 @@
 use super::instructions::registers::load::*; // lda, ldx, ldy
 use super::instructions::registers::store::*; // sta, stx, sty
 
-use super::instructions::jsr::*;
+use super::instructions::jumps::*;
 use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu::opcodes::Registers::*;
 use crate::{fetch_bit, set_bit, Memory, MAX_MEMORY};
@@ -10,7 +10,7 @@ use std::fmt;
 #[derive(Debug)]
 pub struct Processor {
     pub program_counter: u16,
-    pub stack_pointer: u16,
+    pub stack_pointer: u8,
     pub accumulator: u8,
     pub register_x: u8,
     pub register_y: u8,
@@ -39,17 +39,21 @@ impl fmt::UpperHex for Processor {
 
 pub trait Functions {
     fn increment_pc(&mut self) -> ();
-    fn reset(&mut self, memory: &mut Memory) -> ();
+    fn push_pc_to_stack(&mut self, memory: &mut Memory) -> ();
+    fn stack_pointer_to_address(&mut self) -> u16;
+    fn pop_word_from_stack(&mut self, memory: &mut Memory) -> u16;
+
+    fn reset(&mut self, memory: &mut Memory, reset_vector: u16) -> ();
     fn set_status(&mut self, flag: ProcessorStatus, value: bool) -> ();
     fn fetch_status(&self, flag: ProcessorStatus) -> bool;
 
-    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16;
+    fn read_word(&mut self, memory: &Memory, address: u16) -> u16;
     fn read_byte(&mut self, memory: &Memory, address: u16) -> u8;
 
     fn fetch_byte(&mut self, memory: &Memory) -> u8;
-    fn fetch_2byte(&mut self, memory: &Memory) -> u16;
+    fn fetch_word(&mut self, memory: &Memory) -> u16;
 
-    fn write_2byte(&mut self, memory: &mut Memory, data: u16, address: u16) -> ();
+    fn write_word(&mut self, memory: &mut Memory, data: u16, address: u16) -> ();
     fn write_byte(&mut self, memory: &mut Memory, data: u8, address: u16) -> ();
 
     fn execute(&mut self, memory: &mut Memory) -> i64;
@@ -60,9 +64,26 @@ impl Functions for Processor {
         self.program_counter = self.program_counter.wrapping_add(1);
     }
 
-    fn reset(&mut self, memory: &mut Memory) -> () {
-        self.program_counter = 0xFFFC;
-        self.stack_pointer = 0x0100;
+    fn push_pc_to_stack(&mut self, memory: &mut Memory) -> () {
+        let sp_addr: u16 = self.stack_pointer_to_address() - 1;
+        self.write_word(memory, self.program_counter - 1, sp_addr);
+        self.stack_pointer -= 2;
+        self.cycles -= 1;
+    }
+
+    fn stack_pointer_to_address(&mut self) -> u16 {
+        return 0x100 | self.stack_pointer as u16;
+    }
+
+    fn pop_word_from_stack(&mut self, memory: &mut Memory) -> u16 {
+        let sp_addr: u16 = self.stack_pointer_to_address() + 1;
+        self.stack_pointer += 2;
+        return self.read_word(memory, sp_addr);
+    }
+
+    fn reset(&mut self, memory: &mut Memory, reset_vector: u16) -> () {
+        self.program_counter = reset_vector;
+        self.stack_pointer = 0xFF;
         self.processor_status = 0;
         self.accumulator = 0;
         self.register_x = 0;
@@ -101,7 +122,7 @@ impl Functions for Processor {
         return data;
     }
 
-    fn fetch_2byte(&mut self, memory: &Memory) -> u16 {
+    fn fetch_word(&mut self, memory: &Memory) -> u16 {
         let mut data = memory.data[self.program_counter as usize] as u16;
         self.program_counter += 1;
 
@@ -119,13 +140,13 @@ impl Functions for Processor {
         return data;
     }
 
-    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16 {
+    fn read_word(&mut self, memory: &Memory, address: u16) -> u16 {
         let low_byte: u8 = self.read_byte(memory, address);
         let high_byte: u8 = self.read_byte(memory, address + 1);
         return low_byte as u16 | ((high_byte as u16) << 8);
     }
 
-    fn write_2byte(&mut self, memory: &mut Memory, data: u16, address: u16) -> () {
+    fn write_word(&mut self, memory: &mut Memory, data: u16, address: u16) -> () {
         let bytes: [u8; 2] = data.to_le_bytes();
 
         memory.data[address as usize] = bytes[0];
@@ -182,7 +203,8 @@ impl Functions for Processor {
                 STY_ZERO_PAGE_X => self.store_zero_page(memory, RegisterY, Some(RegisterX)),
                 STY_ABSOLUTE => self.store_absolute(memory, RegisterY, None),
 
-                JSR => self.jsr_absolute(memory),
+                JSR => self.jsr(memory),
+                RTS => self.rts(memory),
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return origin_cycles as i64 - self.cycles as i64;
