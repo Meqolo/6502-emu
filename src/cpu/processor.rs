@@ -158,6 +158,14 @@ impl Functions for Processor {
                 STA_INDIRECT_X => self.sta_indirect_x(memory),
                 STA_INDIRECT_Y => self.sta_indirect_y(memory),
 
+                STX_ZERO_PAGE => self.store_zero_page(memory, RegisterX, None),
+                STX_ZERO_PAGE_Y => self.store_zero_page(memory, RegisterX, Some(RegisterY)),
+                STX_ABSOLUTE => self.store_absolute(memory, RegisterX, None),
+
+                STY_ZERO_PAGE => self.store_zero_page(memory, RegisterY, None),
+                STY_ZERO_PAGE_X => self.store_zero_page(memory, RegisterY, Some(RegisterX)),
+                STY_ABSOLUTE => self.store_absolute(memory, RegisterY, None),
+
                 JSR => self.jsr_absolute(memory),
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);

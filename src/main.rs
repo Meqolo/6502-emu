@@ -48,6 +48,8 @@ mod tests {
     use load::ldy::{self, LDYTests};
 
     use store::sta::{self, STATests};
+    use store::stx::{self, STXTests};
+    use store::sty::{self, STYTests};
 
     #[test]
     fn load_accumulator() {
@@ -100,52 +102,38 @@ mod tests {
         // println!("LDY                   ...     ALL TESTS PASSED");
     }
 
-    // #[test]
-    // fn store_accumulator() {
-    //     sta::Test::zero_page();
-    //     println!("STA: Zero page test   ...     PASSED");
-    //     sta::Test::absolute();
-    //     sta::Test::absolute_x();
-    //     sta::Test::absolute_y();
-    //     println!("STA: Absolute test    ...     PASSED");
-    //     sta::Test::indirect_x();
-    //     sta::Test::indirect_y();
-    //     println!("STA: Indirect test    ...     PASSED");
-    //     println!("STA                   ...     ALL TESTS PASSED");
-    // }
-
     #[test]
-    fn sta_zero_page() {
+    fn store_accumulator() {
         sta::Test::zero_page();
-    }
-
-    #[test]
-    fn sta_zero_page_x() {
         sta::Test::zero_page_x();
-    }
-
-    #[test]
-    fn sta_absolute() {
+        println!("STA: Zero page test   ...     PASSED");
         sta::Test::absolute();
-    }
-
-    #[test]
-    fn sta_absolute_x() {
         sta::Test::absolute_x();
-    }
-
-    #[test]
-    fn sta_absolute_y() {
         sta::Test::absolute_y();
-    }
-
-    #[test]
-    fn sta_indirect_x() {
+        println!("STA: Absolute test    ...     PASSED");
         sta::Test::indirect_x();
+        sta::Test::indirect_y();
+        println!("STA: Indirect test    ...     PASSED");
+        println!("STA                   ...     ALL TESTS PASSED");
     }
 
     #[test]
-    fn sta_indirect_y() {
-        sta::Test::indirect_y();
+    fn store_register_x() {
+        stx::Test::zero_page();
+        stx::Test::zero_page_y();
+        println!("STX: Zero page test   ...     PASSED");
+        stx::Test::absolute();
+        println!("STX: Absolute test    ...     PASSED");
+        println!("STX                   ...     ALL TESTS PASSED");
+    }
+
+    #[test]
+    fn store_register_y() {
+        sty::Test::zero_page();
+        sty::Test::zero_page_x();
+        println!("STY: Zero page test   ...     PASSED");
+        sty::Test::absolute();
+        println!("STY: Absolute test    ...     PASSED");
+        println!("STY                   ...     ALL TESTS PASSED");
     }
 }

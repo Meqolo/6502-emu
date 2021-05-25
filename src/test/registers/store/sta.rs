@@ -119,24 +119,4 @@ impl STATests for Test {
         verify_memory(&mut memory, 0x800F, 0x42);
         verify_cycles(cycles, EXPECTED_CYCLES as i64);
     }
-
-    // fn indirect_y_overflow() -> () {
-    //     const EXPECTED_CYCLES: u32 = 6;
-    //     let (mut memory, mut processor) = setup();
-
-    //     processor.register_y = 0xFF;
-
-    //     memory.data[0xFFFC] = opcodes::LDA_INDIRECT_Y;
-    //     memory.data[0xFFFD] = 0x02;
-    //     memory.data[0x0002] = 0x02;
-    //     memory.data[0x0003] = 0x80;
-    //     memory.data[0x8101] = 0x84; // 0x8002 + 0xFF
-
-    //     processor.cycles = EXPECTED_CYCLES;
-    //     let cycles = processor.execute(&mut memory);
-
-    //     verify_register(&processor, Accumulator, 0x84);
-    //     verify_cycles(cycles, EXPECTED_CYCLES as i64);
-    //     verify_lda_flags(&mut processor);
-    // }
 }
