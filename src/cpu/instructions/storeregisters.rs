@@ -1,10 +1,7 @@
-use crate::cpu::opcodes::ProcessorStatus::*;
-use crate::cpu::opcodes::Registers::{self, *};
-use crate::mem::Functions;
-// use crate::cpu::opcodes::Registers::*;
 use super::addressing::*;
+use crate::cpu::opcodes::Registers::{self, *};
 use crate::cpu::processor::*;
-use crate::{fetch_bit, Memory};
+use crate::Memory;
 
 pub trait StoreRegister {
     fn store_immediate(&mut self, memory: &Memory, register: Registers) -> ();
@@ -35,9 +32,9 @@ impl StoreRegister for Processor {
         let zero_page_address: u16 = self.addr_zero_page(memory, offset_register);
 
         match register {
-            Accumulator => memory.write_byte(self.accumulator, zero_page_address, &mut self.cycles),
-            RegisterX => memory.write_byte(self.register_x, zero_page_address, &mut self.cycles),
-            RegisterY => memory.write_byte(self.register_y, zero_page_address, &mut self.cycles),
+            Accumulator => self.write_byte(memory, self.accumulator, zero_page_address),
+            RegisterX => self.write_byte(memory, self.register_x, zero_page_address),
+            RegisterY => self.write_byte(memory, self.register_y, zero_page_address),
         }
     }
 
@@ -50,9 +47,9 @@ impl StoreRegister for Processor {
         let zero_page_address: u16 = self.addr_absolute(memory, offset_register);
 
         match register {
-            Accumulator => memory.write_byte(self.accumulator, zero_page_address, &mut self.cycles),
-            RegisterX => memory.write_byte(self.register_x, zero_page_address, &mut self.cycles),
-            RegisterY => memory.write_byte(self.register_y, zero_page_address, &mut self.cycles),
+            Accumulator => self.write_byte(memory, self.accumulator, zero_page_address),
+            RegisterX => self.write_byte(memory, self.register_x, zero_page_address),
+            RegisterY => self.write_byte(memory, self.register_y, zero_page_address),
         }
 
         println!("{:#X}", zero_page_address);

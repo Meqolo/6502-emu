@@ -1,7 +1,7 @@
 use crate::cpu::opcodes::ProcessorStatus::*;
 use crate::cpu::processor::{Functions, Processor};
 use crate::fetch_bit;
-use crate::mem::{Functions as MemoryFunctions, Memory};
+use crate::mem::Memory;
 
 pub trait JumpToSubroutine {
     fn lda_set_flags(&mut self) -> ();
@@ -17,11 +17,7 @@ impl JumpToSubroutine for Processor {
 
     fn jsr_absolute(&mut self, memory: &mut Memory) -> () {
         let sub_addr: u16 = self.fetch_2byte(memory);
-        memory.write_2byte(
-            self.program_counter - 1,
-            self.stack_pointer,
-            &mut self.cycles,
-        );
+        self.write_2byte(memory, self.program_counter - 1, self.stack_pointer);
 
         self.program_counter = sub_addr;
         self.stack_pointer += 2;

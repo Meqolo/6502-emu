@@ -4,6 +4,7 @@ use super::instructions::storeregisters::StoreRegister;
 use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu::instructions::loadregisters::LoadRegister;
 use crate::cpu::opcodes::Registers::*;
+use crate::mem;
 use crate::{fetch_bit, set_bit, Memory, MAX_MEMORY};
 use std::fmt;
 
@@ -39,15 +40,18 @@ impl fmt::UpperHex for Processor {
 
 pub trait Functions {
     fn increment_pc(&mut self) -> ();
+    fn reset(&mut self, memory: &mut Memory) -> ();
     fn set_status(&mut self, flag: ProcessorStatus, value: bool) -> ();
     fn fetch_status(&self, flag: ProcessorStatus) -> bool;
 
-    fn reset(&mut self, memory: &mut Memory) -> ();
-    fn fetch_byte(&mut self, memory: &Memory) -> u8;
+    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16;
     fn read_byte(&mut self, memory: &Memory, address: u16) -> u8;
 
+    fn fetch_byte(&mut self, memory: &Memory) -> u8;
     fn fetch_2byte(&mut self, memory: &Memory) -> u16;
-    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16;
+
+    fn write_2byte(&mut self, memory: &mut Memory, data: u16, address: u16) -> ();
+    fn write_byte(&mut self, memory: &mut Memory, data: u8, address: u16) -> ();
 
     fn execute(&mut self, memory: &mut Memory) -> i64;
 }
@@ -120,6 +124,19 @@ impl Functions for Processor {
         let low_byte: u8 = self.read_byte(memory, address);
         let high_byte: u8 = self.read_byte(memory, address + 1);
         return low_byte as u16 | ((high_byte as u16) << 8);
+    }
+
+    fn write_2byte(&mut self, memory: &mut Memory, data: u16, address: u16) -> () {
+        let bytes: [u8; 2] = data.to_le_bytes();
+
+        memory.data[address as usize] = bytes[0];
+        memory.data[(address as usize) + 1] = bytes[1];
+        self.cycles -= 2
+    }
+
+    fn write_byte(&mut self, memory: &mut Memory, data: u8, address: u16) -> () {
+        memory.data[address as usize] = data;
+        self.cycles -= 1;
     }
 
     fn execute(&mut self, memory: &mut Memory) -> i64 {
