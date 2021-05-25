@@ -8,6 +8,13 @@ pub enum ProcessorStatus {
     NegativeFlag,
 }
 
+#[derive(Clone, Copy)]
+pub enum Registers {
+    Accumulator,
+    RegisterX,
+    RegisterY,
+}
+
 pub const LDA_IMMEDIATE: u8 = 0xA9;
 pub const LDA_ZERO_PAGE: u8 = 0xA5;
 pub const LDA_ZERO_PAGE_X: u8 = 0xB5;

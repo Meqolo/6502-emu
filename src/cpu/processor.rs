@@ -3,6 +3,8 @@ extern crate bitfield;
 use super::instructions::jsr::*;
 use super::instructions::lda::*;
 use super::opcodes::{ProcessorStatus::*, *};
+use crate::cpu::instructions::loadregisters::LoadRegister;
+use crate::cpu::opcodes::Registers::*;
 use crate::{fetch_bit, set_bit, Memory, MAX_MEMORY};
 use std::fmt;
 
@@ -122,14 +124,27 @@ impl Functions for Processor {
             let instruction: u8 = self.fetch_byte(&memory, &mut cycles);
 
             match instruction {
-                LDA_IMMEDIATE => self.lda_immediate(&memory, &mut cycles),
-                LDA_ZERO_PAGE => self.lda_zero_page(&memory, &mut cycles),
-                LDA_ZERO_PAGE_X => self.lda_zero_page_x(&memory, &mut cycles),
-                LDA_ABSOLUTE => self.lda_absolute(&memory, &mut cycles),
-                LDA_ABSOLUTE_X => self.lda_absolute_x(&memory, &mut cycles),
-                LDA_ABSOLUTE_Y => self.lda_absolute_y(&memory, &mut cycles),
+                LDA_IMMEDIATE => self.load_immediate(memory, &mut cycles, Accumulator),
+                LDA_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, Accumulator),
+                LDA_ZERO_PAGE_X => self.load_zero_page_x(memory, &mut cycles, Accumulator),
+                LDA_ABSOLUTE => self.load_absolute(memory, &mut cycles, Accumulator),
+                LDA_ABSOLUTE_X => self.load_absolute_x(memory, &mut cycles, Accumulator),
+                LDA_ABSOLUTE_Y => self.load_absolute_y(memory, &mut cycles, Accumulator),
                 LDA_INDIRECT_X => self.lda_indirect_x(&memory, &mut cycles),
                 LDA_INDIRECT_Y => self.lda_indirect_y(&memory, &mut cycles),
+
+                LDX_IMMEDIATE => self.load_immediate(memory, &mut cycles, RegisterX),
+                LDX_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterX),
+                LDX_ZERO_PAGE_Y => self.load_zero_page_y(memory, &mut cycles, RegisterX),
+                LDX_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterX),
+                LDX_ABSOLUTE_Y => self.load_absolute_y(memory, &mut cycles, RegisterX),
+
+                LDY_IMMEDIATE => self.load_immediate(memory, &mut cycles, RegisterY),
+                LDY_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterY),
+                LDY_ZERO_PAGE_X => self.load_zero_page_x(memory, &mut cycles, RegisterY),
+                LDY_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterY),
+                LDY_ABSOLUTE_X => self.load_absolute_x(memory, &mut cycles, RegisterY),
+
                 JSR => self.jsr_absolute(memory, &mut cycles),
                 _ => {
                     panic!("Unknown instruction {:#X}", instruction)

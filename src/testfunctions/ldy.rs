@@ -1,9 +1,7 @@
-use super::common::Registers::*;
 use super::common::*;
 use super::registers::*;
-use crate::cpu::opcodes;
+use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
-use crate::cpu::processor::*;
 
 pub struct Test {}
 
@@ -61,7 +59,7 @@ impl LDYTests for Test {
     fn absolute() -> () {
         let (mut memory, mut processor) = setup();
 
-        test_register_absolute(&mut memory, &mut processor, RegisterX, LDX_ABSOLUTE);
+        test_register_absolute(&mut memory, &mut processor, RegisterY, LDY_ABSOLUTE);
     }
 
     fn absolute_x() -> () {

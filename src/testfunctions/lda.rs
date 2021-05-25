@@ -1,7 +1,7 @@
-use super::common::Registers::*;
 use super::common::*;
 use super::registers::*;
 use crate::cpu::opcodes;
+use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
 use crate::cpu::processor::*;
 

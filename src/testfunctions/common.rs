@@ -1,12 +1,8 @@
 use crate::cpu::opcodes::ProcessorStatus::*;
+use crate::cpu::opcodes::Registers;
 use crate::cpu::processor::*;
 use crate::{Memory, MAX_MEMORY};
-
-pub enum Registers {
-    Accumulator,
-    RegisterX,
-    RegisterY,
-}
+use Registers::*;
 
 pub fn setup() -> (Memory, Processor) {
     let mut memory = Memory {
@@ -29,25 +25,25 @@ pub fn setup() -> (Memory, Processor) {
 
 pub fn verify_register(processor: &Processor, register: Registers, expected: u8) -> () {
     match register {
-        Registers::Accumulator => {
+        Accumulator => {
             assert_eq!(
                 processor.accumulator, expected,
                 "the ACCUMULATOR is equal to {:#X} when it should be equal to {:#X}",
                 processor.accumulator, expected
             );
         }
-        Registers::RegisterX => {
+        RegisterX => {
             assert_eq!(
                 processor.register_x, expected,
                 "REGISTER X is equal to {:#X} when it should be equal to {:#X}",
                 processor.register_x, expected
             );
         }
-        Registers::RegisterY => {
+        RegisterY => {
             assert_eq!(
-                processor.register_x, expected,
+                processor.register_y, expected,
                 "REGISTER Y is equal to {:#X} when it should be equal to {:#X}",
-                processor.register_x, expected
+                processor.register_y, expected
             );
         }
     }

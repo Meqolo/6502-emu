@@ -1,4 +1,5 @@
 use super::common::*;
+use crate::cpu::opcodes::Registers;
 use crate::cpu::processor::*;
 use crate::Memory;
 

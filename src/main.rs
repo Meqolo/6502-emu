@@ -104,15 +104,75 @@ mod tests {
         lda::Test::indirect_y_overflow()
     }
 
-    // #[test]
-    // fn ldx_immediate_test() {
-    //     ldx::Test::immediate();
-    // }
+    #[test]
+    fn ldx_immediate_test() {
+        ldx::Test::immediate();
+    }
 
-    // #[test]
-    // fn ldx_zero_page() {
-    //     ldx::Test::zero_page();
-    // }
+    #[test]
+    fn ldx_zero_page() {
+        ldx::Test::zero_page();
+    }
+
+    #[test]
+    fn ldx_zero_page_y() {
+        ldx::Test::zero_page_y();
+    }
+
+    #[test]
+    fn ldx_zero_page_y_overflow() {
+        ldx::Test::zero_page_y_overflow();
+    }
+
+    #[test]
+    fn ldx_absolute() {
+        ldx::Test::absolute();
+    }
+
+    #[test]
+    fn ldx_absolute_y() {
+        ldx::Test::absolute_y()
+    }
+
+    #[test]
+    fn ldx_absolute_y_overflow() {
+        ldx::Test::absolute_y_overflow()
+    }
+
+    #[test]
+    fn ldy_immediate_test() {
+        ldy::Test::immediate();
+    }
+
+    #[test]
+    fn ldy_zero_page() {
+        ldy::Test::zero_page();
+    }
+
+    #[test]
+    fn ldy_zero_page_x() {
+        ldy::Test::zero_page_x();
+    }
+
+    #[test]
+    fn ldy_zero_page_x_overflow() {
+        ldy::Test::zero_page_x_overflow();
+    }
+
+    #[test]
+    fn ldy_absolute() {
+        ldy::Test::absolute();
+    }
+
+    #[test]
+    fn ldy_absolute_x() {
+        ldy::Test::absolute_x()
+    }
+
+    #[test]
+    fn ldy_absolute_x_overflow() {
+        ldy::Test::absolute_x_overflow()
+    }
 
     // #[test]
     // fn ldy_immediate_test() {
