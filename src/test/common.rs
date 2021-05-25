@@ -90,7 +90,7 @@ pub fn verify_lda_flags(processor: &mut Processor) -> () {
     );
 }
 
-pub fn verify_memory(memory: &Memory, address: u32, expected: u8) -> () {
+pub fn verify_memory(memory: &Memory, address: u16, expected: u8) -> () {
     assert_eq!(
         memory.data[address as usize], expected,
         "memory at address {:#X} is equal to {:#X} when it should be equal to {:#X}",

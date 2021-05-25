@@ -19,12 +19,12 @@ pub struct Memory {
 }
 
 pub trait Functions {
-    fn write_2byte(&mut self, data: u16, address: u32, cycles: &mut u32) -> ();
-    fn write_byte(&mut self, data: u8, address: u32, cycles: &mut u32) -> ();
+    fn write_2byte(&mut self, data: u16, address: u16, cycles: &mut u32) -> ();
+    fn write_byte(&mut self, data: u8, address: u16, cycles: &mut u32) -> ();
 }
 
 impl Functions for Memory {
-    fn write_2byte(&mut self, data: u16, address: u32, cycles: &mut u32) -> () {
+    fn write_2byte(&mut self, data: u16, address: u16, cycles: &mut u32) -> () {
         let bytes: [u8; 2] = data.to_le_bytes();
 
         self.data[address as usize] = bytes[0];
@@ -32,7 +32,7 @@ impl Functions for Memory {
         *cycles -= 2
     }
 
-    fn write_byte(&mut self, data: u8, address: u32, cycles: &mut u32) -> () {
+    fn write_byte(&mut self, data: u8, address: u16, cycles: &mut u32) -> () {
         self.data[address as usize] = data;
         *cycles -= 1;
     }

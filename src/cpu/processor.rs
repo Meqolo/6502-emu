@@ -44,10 +44,10 @@ pub trait Functions {
 
     fn reset(&mut self, memory: &mut Memory) -> ();
     fn fetch_byte(&mut self, memory: &Memory) -> u8;
-    fn read_byte(&mut self, memory: &Memory, address: u32) -> u8;
+    fn read_byte(&mut self, memory: &Memory, address: u16) -> u8;
 
     fn fetch_2byte(&mut self, memory: &Memory) -> u16;
-    fn read_2byte(&mut self, memory: &Memory, address: u32) -> u16;
+    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16;
 
     fn execute(&mut self, memory: &mut Memory) -> i64;
 }
@@ -110,13 +110,13 @@ impl Functions for Processor {
         return data;
     }
 
-    fn read_byte(&mut self, memory: &Memory, address: u32) -> u8 {
+    fn read_byte(&mut self, memory: &Memory, address: u16) -> u8 {
         let data: u8 = memory.data[address as usize];
         self.cycles -= 1;
         return data;
     }
 
-    fn read_2byte(&mut self, memory: &Memory, address: u32) -> u16 {
+    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16 {
         let low_byte: u8 = self.read_byte(memory, address);
         let high_byte: u8 = self.read_byte(memory, address + 1);
         return low_byte as u16 | ((high_byte as u16) << 8);

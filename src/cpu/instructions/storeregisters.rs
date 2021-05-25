@@ -32,7 +32,7 @@ impl StoreRegister for Processor {
         register: Registers,
         offset_register: Option<Registers>,
     ) -> () {
-        let zero_page_address: u32 = self.addr_zero_page(memory, offset_register);
+        let zero_page_address: u16 = self.addr_zero_page(memory, offset_register);
 
         match register {
             Accumulator => memory.write_byte(self.accumulator, zero_page_address, &mut self.cycles),
@@ -47,7 +47,7 @@ impl StoreRegister for Processor {
         register: Registers,
         offset_register: Option<Registers>,
     ) -> () {
-        let zero_page_address: u32 = self.addr_absolute(memory, offset_register);
+        let zero_page_address: u16 = self.addr_absolute(memory, offset_register);
 
         match register {
             Accumulator => memory.write_byte(self.accumulator, zero_page_address, &mut self.cycles),
