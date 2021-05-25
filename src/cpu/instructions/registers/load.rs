@@ -1,7 +1,6 @@
+use crate::cpu::instructions::addressing::*;
 use crate::cpu::opcodes::ProcessorStatus::*;
 use crate::cpu::opcodes::Registers::{self, *};
-// use crate::cpu::opcodes::Registers::*;
-use super::addressing::*;
 use crate::cpu::processor::*;
 use crate::{fetch_bit, Memory};
 
@@ -22,6 +21,9 @@ pub trait LoadRegister {
         register: Registers,
         offset_register: Option<Registers>,
     ) -> ();
+
+    fn load_indirect_x(&mut self, memory: &Memory) -> ();
+    fn load_indirect_y(&mut self, memory: &Memory) -> ();
 }
 
 impl LoadRegister for Processor {
@@ -72,5 +74,19 @@ impl LoadRegister for Processor {
         let byte_value: u8 = self.read_byte(memory, absolute_addr);
 
         self.set_register(register, byte_value);
+    }
+
+    fn load_indirect_x(&mut self, memory: &Memory) -> () {
+        let indirect_addr: u16 = self.addr_indirect_x(memory);
+        let byte_value = self.read_byte(memory, indirect_addr);
+
+        self.set_register(Accumulator, byte_value)
+    }
+
+    fn load_indirect_y(&mut self, memory: &Memory) -> () {
+        let indirect_addr: u16 = self.addr_indirect_y(memory);
+        let byte_value = self.read_byte(memory, indirect_addr);
+
+        self.set_register(Accumulator, byte_value);
     }
 }

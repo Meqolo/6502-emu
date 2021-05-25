@@ -1,10 +1,9 @@
-use super::instructions::accumulator::*;
+use super::instructions::registers::load::*; // lda, ldx, ldy
+use super::instructions::registers::store::*; // sta, stx, sty
+
 use super::instructions::jsr::*;
-use super::instructions::storeregisters::StoreRegister;
 use super::opcodes::{ProcessorStatus::*, *};
-use crate::cpu::instructions::loadregisters::LoadRegister;
 use crate::cpu::opcodes::Registers::*;
-use crate::mem;
 use crate::{fetch_bit, set_bit, Memory, MAX_MEMORY};
 use std::fmt;
 
@@ -152,8 +151,8 @@ impl Functions for Processor {
                 LDA_ABSOLUTE => self.load_absolute(memory, Accumulator, None),
                 LDA_ABSOLUTE_X => self.load_absolute(memory, Accumulator, Some(RegisterX)),
                 LDA_ABSOLUTE_Y => self.load_absolute(memory, Accumulator, Some(RegisterY)),
-                LDA_INDIRECT_X => self.lda_indirect_x(&memory),
-                LDA_INDIRECT_Y => self.lda_indirect_y(&memory),
+                LDA_INDIRECT_X => self.load_indirect_x(&memory),
+                LDA_INDIRECT_Y => self.load_indirect_y(&memory),
 
                 LDX_IMMEDIATE => self.load_immediate(memory, RegisterX),
                 LDX_ZERO_PAGE => self.load_zero_page(memory, RegisterX, None),
@@ -172,8 +171,8 @@ impl Functions for Processor {
                 STA_ABSOLUTE => self.store_absolute(memory, Accumulator, None),
                 STA_ABSOLUTE_X => self.store_absolute(memory, Accumulator, Some(RegisterX)),
                 STA_ABSOLUTE_Y => self.store_absolute(memory, Accumulator, Some(RegisterY)),
-                STA_INDIRECT_X => self.sta_indirect_x(memory),
-                STA_INDIRECT_Y => self.sta_indirect_y(memory),
+                STA_INDIRECT_X => self.store_indirect_x(memory),
+                STA_INDIRECT_Y => self.store_indirect_y(memory),
 
                 STX_ZERO_PAGE => self.store_zero_page(memory, RegisterX, None),
                 STX_ZERO_PAGE_Y => self.store_zero_page(memory, RegisterX, Some(RegisterY)),

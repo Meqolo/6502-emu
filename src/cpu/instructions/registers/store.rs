@@ -1,10 +1,9 @@
-use super::addressing::*;
+use crate::cpu::instructions::addressing::*;
 use crate::cpu::opcodes::Registers::{self, *};
 use crate::cpu::processor::*;
 use crate::Memory;
 
 pub trait StoreRegister {
-    fn store_immediate(&mut self, memory: &Memory, register: Registers) -> ();
     fn store_zero_page(
         &mut self,
         memory: &mut Memory,
@@ -18,11 +17,12 @@ pub trait StoreRegister {
         register: Registers,
         offset_register: Option<Registers>,
     ) -> ();
+
+    fn store_indirect_x(&mut self, memory: &mut Memory) -> ();
+    fn store_indirect_y(&mut self, memory: &mut Memory) -> ();
 }
 
 impl StoreRegister for Processor {
-    fn store_immediate(&mut self, memory: &Memory, register: Registers) -> () {}
-
     fn store_zero_page(
         &mut self,
         memory: &mut Memory,
@@ -52,11 +52,21 @@ impl StoreRegister for Processor {
             RegisterY => self.write_byte(memory, self.register_y, zero_page_address),
         }
 
-        println!("{:#X}", zero_page_address);
-
         match offset_register {
             Some(RegisterX) | Some(RegisterY) => self.cycles -= 1,
             _ => {}
         }
+    }
+
+    fn store_indirect_x(&mut self, memory: &mut Memory) -> () {
+        let indirect_addr: u16 = self.addr_indirect_x(memory);
+
+        self.write_byte(memory, self.accumulator, indirect_addr);
+    }
+
+    fn store_indirect_y(&mut self, memory: &mut Memory) -> () {
+        let indirect_addr: u16 = self.addr_indirect_y(memory);
+
+        self.write_byte(memory, self.accumulator, indirect_addr);
     }
 }
