@@ -10,6 +10,7 @@ pub trait JsrTests {
 
 impl JsrTests for Test {
     fn equality() {
+        const EXPECTED_CYCLES: u32 = 9;
         let (mut memory, mut processor) = setup();
 
         memory.data[0xFFFC] = opcodes::JSR;
@@ -18,7 +19,8 @@ impl JsrTests for Test {
         memory.data[0x4242] = opcodes::LDA_IMMEDIATE;
         memory.data[0x4243] = 0x84;
 
-        let cycles = processor.execute(&mut memory, 9);
+        processor.cycles = EXPECTED_CYCLES;
+        let cycles = processor.execute(&mut memory);
         assert_eq!(
             processor.accumulator, 0x84,
             "accumulator is equal to {:#X} when it should be equal to 0x84",

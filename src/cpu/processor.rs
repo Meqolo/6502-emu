@@ -16,6 +16,7 @@ pub struct Processor {
     pub register_x: u8,
     pub register_y: u8,
     pub processor_status: u8,
+    pub cycles: u32,
 }
 
 impl fmt::UpperHex for Processor {
@@ -42,13 +43,13 @@ pub trait Functions {
     fn fetch_status(&self, flag: ProcessorStatus) -> bool;
 
     fn reset(&mut self, memory: &mut Memory) -> ();
-    fn fetch_byte(&mut self, memory: &Memory, cycles: &mut u32) -> u8;
-    fn read_byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u8;
+    fn fetch_byte(&mut self, memory: &Memory) -> u8;
+    fn read_byte(&mut self, memory: &Memory, address: u16) -> u8;
 
-    fn fetch_2byte(&mut self, memory: &Memory, cycles: &mut u32) -> u16;
-    fn read_2byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u16;
+    fn fetch_2byte(&mut self, memory: &Memory) -> u16;
+    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16;
 
-    fn execute(&mut self, memory: &mut Memory, cycles: u32) -> i64;
+    fn execute(&mut self, memory: &mut Memory) -> i64;
 }
 
 impl Functions for Processor {
@@ -86,14 +87,14 @@ impl Functions for Processor {
         }
     }
 
-    fn fetch_byte(&mut self, memory: &Memory, cycles: &mut u32) -> u8 {
+    fn fetch_byte(&mut self, memory: &Memory) -> u8 {
         let data: u8 = memory.data[self.program_counter as usize];
         self.program_counter += 1;
-        *cycles -= 1;
+        self.cycles -= 1;
         return data;
     }
 
-    fn fetch_2byte(&mut self, memory: &Memory, cycles: &mut u32) -> u16 {
+    fn fetch_2byte(&mut self, memory: &Memory) -> u16 {
         let mut data = memory.data[self.program_counter as usize] as u16;
         self.program_counter += 1;
 
@@ -101,72 +102,58 @@ impl Functions for Processor {
         data = data.to_le();
         self.program_counter += 1;
 
-        *cycles -= 2;
+        self.cycles -= 2;
         return data;
     }
 
-    fn read_byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u8 {
+    fn read_byte(&mut self, memory: &Memory, address: u16) -> u8 {
         let data: u8 = memory.data[address as usize];
-        *cycles -= 1;
+        self.cycles -= 1;
         return data;
     }
 
-    fn read_2byte(&mut self, memory: &Memory, cycles: &mut u32, address: u16) -> u16 {
-        let low_byte: u8 = self.read_byte(memory, cycles, address);
-        let high_byte: u8 = self.read_byte(memory, cycles, address + 1);
+    fn read_2byte(&mut self, memory: &Memory, address: u16) -> u16 {
+        let low_byte: u8 = self.read_byte(memory, address);
+        let high_byte: u8 = self.read_byte(memory, address + 1);
         return low_byte as u16 | ((high_byte as u16) << 8);
     }
 
-    fn execute(&mut self, memory: &mut Memory, mut cycles: u32) -> i64 {
-        let origin_cycles: u32 = cycles.clone();
+    fn execute(&mut self, memory: &mut Memory) -> i64 {
+        let origin_cycles: u32 = self.cycles.clone();
 
-        while cycles > 0 {
-            let instruction: u8 = self.fetch_byte(&memory, &mut cycles);
+        while self.cycles > 0 {
+            let instruction: u8 = self.fetch_byte(&memory);
 
             match instruction {
-                LDA_IMMEDIATE => self.load_immediate(memory, &mut cycles, Accumulator),
-                LDA_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, Accumulator, None),
-                LDA_ZERO_PAGE_X => {
-                    self.load_zero_page(memory, &mut cycles, Accumulator, Some(RegisterX))
-                }
-                LDA_ABSOLUTE => self.load_absolute(memory, &mut cycles, Accumulator, None),
-                LDA_ABSOLUTE_X => {
-                    self.load_absolute(memory, &mut cycles, Accumulator, Some(RegisterX))
-                }
-                LDA_ABSOLUTE_Y => {
-                    self.load_absolute(memory, &mut cycles, Accumulator, Some(RegisterY))
-                }
-                LDA_INDIRECT_X => self.lda_indirect_x(&memory, &mut cycles),
-                LDA_INDIRECT_Y => self.lda_indirect_y(&memory, &mut cycles),
+                LDA_IMMEDIATE => self.load_immediate(memory, Accumulator),
+                LDA_ZERO_PAGE => self.load_zero_page(memory, Accumulator, None),
+                LDA_ZERO_PAGE_X => self.load_zero_page(memory, Accumulator, Some(RegisterX)),
+                LDA_ABSOLUTE => self.load_absolute(memory, Accumulator, None),
+                LDA_ABSOLUTE_X => self.load_absolute(memory, Accumulator, Some(RegisterX)),
+                LDA_ABSOLUTE_Y => self.load_absolute(memory, Accumulator, Some(RegisterY)),
+                LDA_INDIRECT_X => self.lda_indirect_x(&memory),
+                LDA_INDIRECT_Y => self.lda_indirect_y(&memory),
 
-                LDX_IMMEDIATE => self.load_immediate(memory, &mut cycles, RegisterX),
-                LDX_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterX, None),
-                LDX_ZERO_PAGE_Y => {
-                    self.load_zero_page(memory, &mut cycles, RegisterX, Some(RegisterY))
-                }
-                LDX_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterX, None),
-                LDX_ABSOLUTE_Y => {
-                    self.load_absolute(memory, &mut cycles, RegisterX, Some(RegisterY))
-                }
+                LDX_IMMEDIATE => self.load_immediate(memory, RegisterX),
+                LDX_ZERO_PAGE => self.load_zero_page(memory, RegisterX, None),
+                LDX_ZERO_PAGE_Y => self.load_zero_page(memory, RegisterX, Some(RegisterY)),
+                LDX_ABSOLUTE => self.load_absolute(memory, RegisterX, None),
+                LDX_ABSOLUTE_Y => self.load_absolute(memory, RegisterX, Some(RegisterY)),
 
-                LDY_IMMEDIATE => self.load_immediate(memory, &mut cycles, RegisterY),
-                LDY_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterY, None),
-                LDY_ZERO_PAGE_X => {
-                    self.load_zero_page(memory, &mut cycles, RegisterY, Some(RegisterX))
-                }
-                LDY_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterY, None),
-                LDY_ABSOLUTE_X => {
-                    self.load_absolute(memory, &mut cycles, RegisterY, Some(RegisterX))
-                }
+                LDY_IMMEDIATE => self.load_immediate(memory, RegisterY),
+                LDY_ZERO_PAGE => self.load_zero_page(memory, RegisterY, None),
+                LDY_ZERO_PAGE_X => self.load_zero_page(memory, RegisterY, Some(RegisterX)),
+                LDY_ABSOLUTE => self.load_absolute(memory, RegisterY, None),
+                LDY_ABSOLUTE_X => self.load_absolute(memory, RegisterY, Some(RegisterX)),
 
-                JSR => self.jsr_absolute(memory, &mut cycles),
+                JSR => self.jsr_absolute(memory),
                 _ => {
                     panic!("Unknown instruction {:#X}", instruction)
                 }
             }
         }
 
-        let cycles_used: i64 = origin_cycles as i64 - cycles as i64;
+        let cycles_used: i64 = origin_cycles as i64 - self.cycles as i64;
         return cycles_used;
     }
 }

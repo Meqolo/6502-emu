@@ -16,6 +16,7 @@ pub fn setup() -> (Memory, Processor) {
         register_x: 0,
         register_y: 0,
         processor_status: 0,
+        cycles: 0,
     };
 
     processor.reset(&mut memory);

@@ -134,7 +134,8 @@ impl LDATests for Test {
         memory.data[0x0007] = 0x80;
         memory.data[0x8000] = 0x84;
 
-        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
+        processor.cycles = EXPECTED_CYCLES;
+        let cycles = processor.execute(&mut memory);
 
         verify_register(&processor, Accumulator, 0x84);
         verify_cycles(cycles, EXPECTED_CYCLES as i64);
@@ -153,7 +154,8 @@ impl LDATests for Test {
         memory.data[0x0003] = 0x80;
         memory.data[0x8004] = 0x84; // 0x8000 + 0x4
 
-        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
+        processor.cycles = EXPECTED_CYCLES;
+        let cycles = processor.execute(&mut memory);
 
         verify_register(&processor, Accumulator, 0x84);
         verify_cycles(cycles, EXPECTED_CYCLES as i64);
@@ -172,7 +174,8 @@ impl LDATests for Test {
         memory.data[0x0003] = 0x80;
         memory.data[0x8101] = 0x84; // 0x8002 + 0xFF
 
-        let cycles = processor.execute(&mut memory, EXPECTED_CYCLES);
+        processor.cycles = EXPECTED_CYCLES;
+        let cycles = processor.execute(&mut memory);
 
         verify_register(&processor, Accumulator, 0x84);
         verify_cycles(cycles, EXPECTED_CYCLES as i64);

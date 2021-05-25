@@ -20,6 +20,7 @@ fn main() {
         register_x: 0,
         register_y: 0,
         processor_status: 0,
+        cycles: 0,
     };
 
     processor.reset(&mut memory);
@@ -29,7 +30,7 @@ fn main() {
     memory.data[0x4242] = opcodes::LDA_IMMEDIATE;
     memory.data[0x4243] = 0x84;
 
-    processor.execute(&mut memory, 0);
+    processor.execute(&mut memory);
 
     println!("{:X}", processor);
 }
@@ -173,14 +174,4 @@ mod tests {
     fn ldy_absolute_x_overflow() {
         ldy::Test::absolute_x_overflow()
     }
-
-    // #[test]
-    // fn ldy_immediate_test() {
-    //     ldy::Test::immediate();
-    // }
-
-    // #[test]
-    // fn ldy_zero_page() {
-    //     ldy::Test::zero_page();
-    // }
 }

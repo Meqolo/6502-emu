@@ -14,7 +14,8 @@ pub fn test_register_immediate(
     memory.data[0xFFFC] = opcode;
     memory.data[0xFFFD] = 0x84;
 
-    let cycles = processor.execute(memory, EXPECTED_CYCLES);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(memory);
 
     verify_register(&processor, register, 0x84);
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
@@ -33,7 +34,8 @@ pub fn test_register_zero_page(
     memory.data[0xFFFD] = 0x42;
     memory.data[0x0042] = 0x84;
 
-    let cycles = processor.execute(memory, EXPECTED_CYCLES);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(memory);
 
     verify_register(&processor, register, 0x84);
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
@@ -72,7 +74,8 @@ pub fn test_register_zero_page_register(
         }
     }
 
-    let cycles = processor.execute(memory, EXPECTED_CYCLES);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(memory);
 
     verify_register(&processor, register, 0x84);
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
@@ -92,7 +95,8 @@ pub fn test_register_absolute(
     memory.data[0xFFFE] = 0x44; // 0x4480
     memory.data[0x4480] = 0x84;
 
-    let cycles = processor.execute(memory, EXPECTED_CYCLES);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(memory);
 
     verify_register(&processor, register, 0x84);
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
@@ -133,7 +137,8 @@ pub fn test_register_absolute_register(
         memory.data[0x4481] = 0x84;
     }
 
-    let cycles = processor.execute(memory, expected_cycles);
+    processor.cycles = expected_cycles;
+    let cycles = processor.execute(memory);
 
     verify_register(&processor, register, 0x84);
     verify_cycles(cycles, expected_cycles as i64);
