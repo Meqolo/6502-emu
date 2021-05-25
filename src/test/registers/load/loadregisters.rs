@@ -1,6 +1,6 @@
-use super::common::*;
 use crate::cpu::opcodes::Registers;
 use crate::cpu::processor::*;
+use crate::test::common::*;
 use crate::Memory;
 
 pub fn test_register_immediate(

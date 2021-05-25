@@ -1,4 +1,4 @@
-pub const MAX_MEMORY: usize = 1024 * 64;
+pub const MAX_MEMORY: usize = 1024 * 64; // u32
 
 pub fn fetch_bit(value: u8, check_bit: u8) -> bool {
     return value & (1 << check_bit) != 0;
@@ -19,15 +19,21 @@ pub struct Memory {
 }
 
 pub trait Functions {
-    fn write_2byte(&mut self, data: u16, address: u16, cycles: &mut u32) -> ();
+    fn write_2byte(&mut self, data: u16, address: u32, cycles: &mut u32) -> ();
+    fn write_byte(&mut self, data: u8, address: u32, cycles: &mut u32) -> ();
 }
 
 impl Functions for Memory {
-    fn write_2byte(&mut self, data: u16, address: u16, cycles: &mut u32) -> () {
-        let bytes: [u8; 2] = data.to_be_bytes();
+    fn write_2byte(&mut self, data: u16, address: u32, cycles: &mut u32) -> () {
+        let bytes: [u8; 2] = data.to_le_bytes();
 
         self.data[address as usize] = bytes[0];
         self.data[(address as usize) + 1] = bytes[1];
         *cycles -= 2
+    }
+
+    fn write_byte(&mut self, data: u8, address: u32, cycles: &mut u32) -> () {
+        self.data[address as usize] = data;
+        *cycles -= 1;
     }
 }

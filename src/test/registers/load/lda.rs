@@ -1,9 +1,9 @@
-use super::common::*;
-use super::registers::*;
+use super::loadregisters::*;
 use crate::cpu::opcodes;
 use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
 use crate::cpu::processor::*;
+use crate::test::common::*;
 
 pub struct Test {}
 

@@ -56,7 +56,7 @@ impl LoadRegister for Processor {
         register: Registers,
         offset_register: Option<Registers>,
     ) -> () {
-        let zero_page_addr: u16 = self.addr_zero_page(&memory, offset_register);
+        let zero_page_addr: u32 = self.addr_zero_page(&memory, offset_register);
         let byte_value: u8 = self.read_byte(&memory, zero_page_addr);
 
         self.set_register(register, byte_value);
@@ -68,8 +68,8 @@ impl LoadRegister for Processor {
         register: Registers,
         offset_register: Option<Registers>,
     ) -> () {
-        let absolute_addr: u16 = self.addr_absolute(&memory, offset_register);
-        let byte_value: u8 = self.read_byte(memory, absolute_addr as u16);
+        let absolute_addr: u32 = self.addr_absolute(&memory, offset_register);
+        let byte_value: u8 = self.read_byte(memory, absolute_addr);
 
         self.set_register(register, byte_value);
     }

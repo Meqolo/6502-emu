@@ -89,3 +89,11 @@ pub fn verify_lda_flags(processor: &mut Processor) -> () {
         "overflow flag is not set to 0 when it should be"
     );
 }
+
+pub fn verify_memory(memory: &Memory, address: u32, expected: u8) -> () {
+    assert_eq!(
+        memory.data[address as usize], expected,
+        "memory at address {:#X} is equal to {:#X} when it should be equal to {:#X}",
+        address, memory.data[address as usize], expected
+    );
+}

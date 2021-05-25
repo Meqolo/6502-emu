@@ -6,7 +6,7 @@ use cpu::{opcodes, processor::*};
 mod mem;
 use mem::*;
 
-mod testfunctions;
+mod test;
 
 fn main() {
     let mut memory = Memory {
@@ -38,140 +38,114 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::testfunctions::{jsr::JsrTests, lda::LDATests, ldx::LDXTests, ldy::LDYTests};
-    use testfunctions::*;
+    use test::*;
+
+    use super::tests::registers::load;
+    use super::tests::registers::store;
+
+    use load::lda::{self, LDATests};
+    use load::ldx::{self, LDXTests};
+    use load::ldy::{self, LDYTests};
+
+    use store::sta::{self, STATests};
+
+    #[test]
+    fn load_accumulator() {
+        lda::Test::immediate();
+        // println!("LDA: Immediate test   ...     PASSED");
+        lda::Test::zero_page();
+        lda::Test::zero_page_x();
+        lda::Test::zero_page_x_overflow();
+        // println!("LDA: Zero page test   ...     PASSED");
+        lda::Test::absolute();
+        lda::Test::absolute_x();
+        lda::Test::absolute_x_overflow();
+        lda::Test::absolute_y();
+        lda::Test::absolute_y_overflow();
+        // println!("LDA: Absolute test    ...     PASSED");
+        lda::Test::indirect_x();
+        lda::Test::indirect_y();
+        lda::Test::indirect_y_overflow();
+        // println!("LDA: Indirect test    ...     PASSED");
+        // println!("LDA                   ...     ALL TESTS PASSED");
+    }
+
+    #[test]
+    fn load_register_x() {
+        ldx::Test::immediate();
+        // println!("LDX: Immediate test   ...     PASSED");
+        ldx::Test::zero_page();
+        ldx::Test::zero_page_y();
+        ldx::Test::zero_page_y_overflow();
+        // println!("LDX: Zero page test   ...     PASSED");
+        ldx::Test::absolute();
+        ldx::Test::absolute_y();
+        ldx::Test::absolute_y_overflow();
+        // println!("LDX: Absolute test    ...     PASSED");
+        // println!("LDX                   ...     ALL TESTS PASSED");
+    }
+
+    #[test]
+    fn load_register_y() {
+        ldy::Test::immediate();
+        // println!("LDY: Immediate test   ...     PASSED");
+        ldy::Test::zero_page();
+        ldy::Test::zero_page_x();
+        ldy::Test::zero_page_x_overflow();
+        // println!("LDY: Zero page test   ...     PASSED");
+        ldy::Test::absolute();
+        ldy::Test::absolute_x();
+        ldy::Test::absolute_x_overflow();
+        // println!("LDY: Absolute test    ...     PASSED");
+        // println!("LDY                   ...     ALL TESTS PASSED");
+    }
 
     // #[test]
-    // // fn jsr_test() {
-    // //     jsr::Test::equality();
-    // // }
+    // fn store_accumulator() {
+    //     sta::Test::zero_page();
+    //     println!("STA: Zero page test   ...     PASSED");
+    //     sta::Test::absolute();
+    //     sta::Test::absolute_x();
+    //     sta::Test::absolute_y();
+    //     println!("STA: Absolute test    ...     PASSED");
+    //     sta::Test::indirect_x();
+    //     sta::Test::indirect_y();
+    //     println!("STA: Indirect test    ...     PASSED");
+    //     println!("STA                   ...     ALL TESTS PASSED");
+    // }
+
     #[test]
-    fn lda_immediate_test() {
-        lda::Test::immediate();
+    fn sta_zero_page() {
+        sta::Test::zero_page();
     }
 
     #[test]
-    fn lda_zero_page() {
-        lda::Test::zero_page();
+    fn sta_zero_page_x() {
+        sta::Test::zero_page_x();
     }
 
     #[test]
-    fn lda_zero_page_x() {
-        lda::Test::zero_page_x();
+    fn sta_absolute() {
+        sta::Test::absolute();
     }
 
     #[test]
-    fn lda_zero_page_x_overflow() {
-        lda::Test::zero_page_x_overflow();
+    fn sta_absolute_x() {
+        sta::Test::absolute_x();
     }
 
     #[test]
-    fn lda_absolute() {
-        lda::Test::absolute();
+    fn sta_absolute_y() {
+        sta::Test::absolute_y();
     }
 
     #[test]
-    fn lda_absolute_x() {
-        lda::Test::absolute_x();
+    fn sta_indirect_x() {
+        sta::Test::indirect_x();
     }
 
     #[test]
-    fn lda_absolute_x_overflow() {
-        lda::Test::absolute_x_overflow();
-    }
-
-    #[test]
-    fn lda_absolute_y() {
-        lda::Test::absolute_y()
-    }
-
-    #[test]
-    fn lda_absolute_y_overflow() {
-        lda::Test::absolute_y_overflow()
-    }
-
-    #[test]
-    fn lda_indirect_x() {
-        lda::Test::indirect_x()
-    }
-
-    #[test]
-    fn lda_indirect_y() {
-        lda::Test::indirect_y()
-    }
-
-    #[test]
-    fn lda_indirect_y_overflow() {
-        lda::Test::indirect_y_overflow()
-    }
-
-    #[test]
-    fn ldx_immediate_test() {
-        ldx::Test::immediate();
-    }
-
-    #[test]
-    fn ldx_zero_page() {
-        ldx::Test::zero_page();
-    }
-
-    #[test]
-    fn ldx_zero_page_y() {
-        ldx::Test::zero_page_y();
-    }
-
-    #[test]
-    fn ldx_zero_page_y_overflow() {
-        ldx::Test::zero_page_y_overflow();
-    }
-
-    #[test]
-    fn ldx_absolute() {
-        ldx::Test::absolute();
-    }
-
-    #[test]
-    fn ldx_absolute_y() {
-        ldx::Test::absolute_y()
-    }
-
-    #[test]
-    fn ldx_absolute_y_overflow() {
-        ldx::Test::absolute_y_overflow()
-    }
-
-    #[test]
-    fn ldy_immediate_test() {
-        ldy::Test::immediate();
-    }
-
-    #[test]
-    fn ldy_zero_page() {
-        ldy::Test::zero_page();
-    }
-
-    #[test]
-    fn ldy_zero_page_x() {
-        ldy::Test::zero_page_x();
-    }
-
-    #[test]
-    fn ldy_zero_page_x_overflow() {
-        ldy::Test::zero_page_x_overflow();
-    }
-
-    #[test]
-    fn ldy_absolute() {
-        ldy::Test::absolute();
-    }
-
-    #[test]
-    fn ldy_absolute_x() {
-        ldy::Test::absolute_x()
-    }
-
-    #[test]
-    fn ldy_absolute_x_overflow() {
-        ldy::Test::absolute_x_overflow()
+    fn sta_indirect_y() {
+        sta::Test::indirect_y();
     }
 }
