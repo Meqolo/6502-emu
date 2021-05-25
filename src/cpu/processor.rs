@@ -125,25 +125,39 @@ impl Functions for Processor {
 
             match instruction {
                 LDA_IMMEDIATE => self.load_immediate(memory, &mut cycles, Accumulator),
-                LDA_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, Accumulator),
-                LDA_ZERO_PAGE_X => self.load_zero_page_x(memory, &mut cycles, Accumulator),
-                LDA_ABSOLUTE => self.load_absolute(memory, &mut cycles, Accumulator),
-                LDA_ABSOLUTE_X => self.load_absolute_x(memory, &mut cycles, Accumulator),
-                LDA_ABSOLUTE_Y => self.load_absolute_y(memory, &mut cycles, Accumulator),
+                LDA_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, Accumulator, None),
+                LDA_ZERO_PAGE_X => {
+                    self.load_zero_page(memory, &mut cycles, Accumulator, Some(RegisterX))
+                }
+                LDA_ABSOLUTE => self.load_absolute(memory, &mut cycles, Accumulator, None),
+                LDA_ABSOLUTE_X => {
+                    self.load_absolute(memory, &mut cycles, Accumulator, Some(RegisterX))
+                }
+                LDA_ABSOLUTE_Y => {
+                    self.load_absolute(memory, &mut cycles, Accumulator, Some(RegisterY))
+                }
                 LDA_INDIRECT_X => self.lda_indirect_x(&memory, &mut cycles),
                 LDA_INDIRECT_Y => self.lda_indirect_y(&memory, &mut cycles),
 
                 LDX_IMMEDIATE => self.load_immediate(memory, &mut cycles, RegisterX),
-                LDX_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterX),
-                LDX_ZERO_PAGE_Y => self.load_zero_page_y(memory, &mut cycles, RegisterX),
-                LDX_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterX),
-                LDX_ABSOLUTE_Y => self.load_absolute_y(memory, &mut cycles, RegisterX),
+                LDX_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterX, None),
+                LDX_ZERO_PAGE_Y => {
+                    self.load_zero_page(memory, &mut cycles, RegisterX, Some(RegisterY))
+                }
+                LDX_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterX, None),
+                LDX_ABSOLUTE_Y => {
+                    self.load_absolute(memory, &mut cycles, RegisterX, Some(RegisterY))
+                }
 
                 LDY_IMMEDIATE => self.load_immediate(memory, &mut cycles, RegisterY),
-                LDY_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterY),
-                LDY_ZERO_PAGE_X => self.load_zero_page_x(memory, &mut cycles, RegisterY),
-                LDY_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterY),
-                LDY_ABSOLUTE_X => self.load_absolute_x(memory, &mut cycles, RegisterY),
+                LDY_ZERO_PAGE => self.load_zero_page(memory, &mut cycles, RegisterY, None),
+                LDY_ZERO_PAGE_X => {
+                    self.load_zero_page(memory, &mut cycles, RegisterY, Some(RegisterX))
+                }
+                LDY_ABSOLUTE => self.load_absolute(memory, &mut cycles, RegisterY, None),
+                LDY_ABSOLUTE_X => {
+                    self.load_absolute(memory, &mut cycles, RegisterY, Some(RegisterX))
+                }
 
                 JSR => self.jsr_absolute(memory, &mut cycles),
                 _ => {
