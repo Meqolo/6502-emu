@@ -1,6 +1,7 @@
-use crate::cpu::opcodes::ProcessorStatus::*;
+use crate::cpu::opcodes::ProcessorStatus::{self, *};
 use crate::cpu::opcodes::Registers;
 use crate::cpu::processor::*;
+use crate::tests::registers::store::sta;
 use crate::{Memory, MAX_MEMORY};
 use Registers::*;
 
@@ -58,36 +59,17 @@ pub fn verify_cycles(cycles: i64, expected_cycles: i64) -> () {
     );
 }
 
+pub fn verify_flag(processor: &Processor, flag: ProcessorStatus, expected: bool) -> () {
+    let status: bool = processor.fetch_status(flag);
+    assert_eq!(status, expected, "{:?} is not set to {}", flag, expected);
+}
+
 pub fn verify_lda_flags(processor: &mut Processor) -> () {
-    assert_eq!(
-        processor.fetch_status(CarryFlag),
-        false,
-        "carry flag is not set to 0 when it should be"
-    );
-
-    assert_eq!(
-        processor.fetch_status(InterruptDisable),
-        false,
-        "interrupt disable is not set to 0 when it should be"
-    );
-
-    assert_eq!(
-        processor.fetch_status(DecimalMode),
-        false,
-        "decimal mode is not set to 0 when it should be"
-    );
-
-    assert_eq!(
-        processor.fetch_status(BreakCommand),
-        false,
-        "break command is not set to 0 when it should be"
-    );
-
-    assert_eq!(
-        processor.fetch_status(OverflowFlag),
-        false,
-        "overflow flag is not set to 0 when it should be"
-    );
+    verify_flag(processor, CarryFlag, false);
+    verify_flag(processor, InterruptDisable, false);
+    verify_flag(processor, DecimalMode, false);
+    verify_flag(processor, BreakCommand, false);
+    verify_flag(processor, OverflowFlag, false);
 }
 
 pub fn verify_memory(memory: &Memory, address: u16, expected: u8) -> () {

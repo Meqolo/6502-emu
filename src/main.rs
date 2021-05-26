@@ -152,4 +152,10 @@ fn main() {
     logical::test_logic_indirect_y(ExclusiveOr);
     println!("EOR INDIRECT Y    PASSED");
     println!("       EOR FULL PASS \n");
+
+    logical::test_bit_zero_page();
+    println!("BIT ZERO PAGE     PASSED");
+    logical::test_bit_absolute();
+    println!("BIT ABSOLUTE      PASSED");
+    println!("       BIT FULL PASS \n");
 }

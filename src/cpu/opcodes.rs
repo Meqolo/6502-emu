@@ -1,3 +1,4 @@
+#[derive(Debug, Clone, Copy)]
 pub enum ProcessorStatus {
     CarryFlag,
     ZeroFlag,
@@ -96,3 +97,6 @@ pub const OR_ABSOLUTE_X: u8 = 0x1D;
 pub const OR_ABSOLUTE_Y: u8 = 0x19;
 pub const OR_INDIRECT_X: u8 = 0x01;
 pub const OR_INDIRECT_Y: u8 = 0x11;
+
+pub const BIT_ZERO_PAGE: u8 = 0x24;
+pub const BIT_ABSOLUTE: u8 = 0x2C;

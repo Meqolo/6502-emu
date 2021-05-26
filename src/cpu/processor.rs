@@ -225,6 +225,9 @@ impl Functions for Processor {
                 EOR_INDIRECT_X => self.logic_indirect_x(memory, ExclusiveOr),
                 EOR_INDIRECT_Y => self.logic_indirect_y(memory, ExclusiveOr),
 
+                BIT_ZERO_PAGE => self.bit_zero_page(memory),
+                BIT_ABSOLUTE => self.bit_absolute(memory),
+
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return origin_cycles as i64 - self.cycles as i64;

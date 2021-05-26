@@ -1,12 +1,10 @@
-use crate::cpu::opcodes::LogicalOperations::*;
-use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
 use crate::cpu::processor::Functions;
 use crate::tests::common::*;
 
-use crate::cpu::opcodes::Registers;
-use crate::cpu::processor::*;
-use crate::Memory;
+use LogicalOperations::*;
+use ProcessorStatus::*;
+use Registers::{self, *};
 
 pub fn complete_logic_op(a: u8, b: u8, operation: LogicalOperations) -> u8 {
     match operation {
@@ -215,4 +213,41 @@ pub fn test_logic_indirect_y(operation: LogicalOperations) -> () {
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
     verify_lda_flags(&mut processor);
+}
+
+pub fn test_bit_zero_page() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    let (mut memory, mut processor) = setup();
+
+    memory.data[0xFFFC] = BIT_ZERO_PAGE;
+    memory.data[0xFFFD] = 0x42;
+    memory.data[0x0042] = 0xCC;
+
+    processor.cycles = EXPECTED_CYCLES;
+    processor.accumulator = 0xCC;
+    let cycles = processor.execute(&mut memory);
+
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+    verify_flag(&processor, ZeroFlag, false);
+    verify_flag(&processor, NegativeFlag, true);
+    verify_flag(&processor, OverflowFlag, true);
+}
+
+pub fn test_bit_absolute() -> () {
+    const EXPECTED_CYCLES: u32 = 4;
+    let (mut memory, mut processor) = setup();
+
+    memory.data[0xFFFC] = BIT_ABSOLUTE;
+    memory.data[0xFFFD] = 0x00;
+    memory.data[0xFFFE] = 0x80;
+    memory.data[0x8000] = 0x33;
+
+    processor.cycles = EXPECTED_CYCLES;
+    processor.accumulator = 0xCC;
+    let cycles = processor.execute(&mut memory);
+
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+    verify_flag(&processor, ZeroFlag, true);
+    verify_flag(&processor, NegativeFlag, false);
+    verify_flag(&processor, OverflowFlag, false);
 }

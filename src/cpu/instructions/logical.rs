@@ -1,7 +1,8 @@
 use crate::cpu::opcodes::LogicalOperations::{self, *};
+use crate::cpu::opcodes::ProcessorStatus::*;
 use crate::cpu::opcodes::Registers::{self, *};
 use crate::cpu::processor::{Functions, Processor};
-use crate::mem::Memory;
+use crate::mem::*;
 
 use super::addressing::Addressing;
 use super::registers::load::LoadRegister;
@@ -31,6 +32,9 @@ pub trait Logical {
 
     fn logic_indirect_x(&mut self, memory: &mut Memory, operation: LogicalOperations) -> ();
     fn logic_indirect_y(&mut self, memory: &mut Memory, operation: LogicalOperations) -> ();
+
+    fn bit_zero_page(&mut self, memory: &mut Memory);
+    fn bit_absolute(&mut self, memory: &mut Memory);
 }
 
 impl Logical for Processor {
@@ -86,5 +90,25 @@ impl Logical for Processor {
             Accumulator,
             complete_logic_op(self.accumulator, byte_value, operation),
         );
+    }
+
+    fn bit_zero_page(&mut self, memory: &mut Memory) {
+        let zero_page_addr = self.addr_zero_page(memory, None);
+        let value = self.read_byte(memory, zero_page_addr);
+
+        println!("{:#0010b}", value);
+
+        self.set_status(ZeroFlag, self.accumulator & value == 0);
+        self.set_status(OverflowFlag, fetch_bit(value, 6));
+        self.set_status(NegativeFlag, fetch_bit(value, 7))
+    }
+
+    fn bit_absolute(&mut self, memory: &mut Memory) {
+        let absolute_addr = self.addr_absolute(memory, None);
+        let value = self.read_byte(memory, absolute_addr);
+
+        self.set_status(ZeroFlag, self.accumulator & value == 0);
+        self.set_status(OverflowFlag, fetch_bit(value, 6));
+        self.set_status(NegativeFlag, fetch_bit(value, 7))
     }
 }
