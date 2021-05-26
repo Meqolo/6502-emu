@@ -8,6 +8,12 @@ pub enum ProcessorStatus {
     NegativeFlag,
 }
 
+pub enum LogicalOperations {
+    And,
+    Or,
+    ExclusiveOr,
+}
+
 #[derive(Clone, Copy)]
 pub enum Registers {
     Accumulator,

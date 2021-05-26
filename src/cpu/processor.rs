@@ -1,11 +1,12 @@
 use super::instructions::jumps::*;
+use super::instructions::logical::Logical;
 use super::instructions::registers::load::*; // lda, ldx, ldy
 use super::instructions::registers::store::*; // sta, stx, sty
 use super::instructions::stackops::*; // tsx // jsr, rts, jmp
 
 use super::opcodes::{ProcessorStatus::*, *};
+use crate::cpu::opcodes::LogicalOperations::*;
 use crate::cpu::opcodes::Registers::*;
-use crate::mem;
 use crate::{fetch_bit, set_bit, Memory, MAX_MEMORY};
 use std::fmt;
 
@@ -196,6 +197,15 @@ impl Functions for Processor {
                 PHP => self.php(memory),
                 PLA => self.pla(memory),
                 PLP => self.plp(memory),
+
+                AND_IMMEDIATE => self.logic_immediate(memory, And),
+                AND_ZERO_PAGE => self.logic_zero_page(memory, And, None),
+                AND_ZERO_PAGE_X => self.logic_zero_page(memory, And, Some(RegisterX)),
+                AND_ABSOLUTE => self.logic_absolute(memory, And, None),
+                AND_ABSOLUTE_X => self.logic_absolute(memory, And, Some(RegisterX)),
+                AND_ABSOLUTE_Y => self.logic_absolute(memory, And, Some(RegisterY)),
+                AND_INDIRECT_X => self.logic_indirect_x(memory, And),
+                AND_INDIRECT_Y => self.logic_indirect_y(memory, And),
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return origin_cycles as i64 - self.cycles as i64;

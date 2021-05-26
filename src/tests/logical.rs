@@ -1,5 +1,4 @@
-use crate::cpu::functions::stack::StackFunctions;
-use crate::cpu::opcodes::ProcessorStatus::*;
+use crate::cpu::opcodes::LogicalOperations::*;
 use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
 use crate::cpu::processor::Functions;
@@ -7,33 +6,23 @@ use crate::tests::common::*;
 
 use crate::cpu::opcodes::Registers;
 use crate::cpu::processor::*;
-use crate::tests::common::*;
 use crate::Memory;
-
-pub enum LogicalOperations {
-    And,
-    Or,
-    ExclusiveOr,
-}
 
 pub fn complete_logic_op(a: u8, b: u8, operation: LogicalOperations) -> u8 {
     match operation {
-        LogicalOperations::And => return a & b,
-        LogicalOperations::Or => return a | b,
-        LogicalOperations::ExclusiveOr => return a ^ b,
+        And => return a & b,
+        Or => return a | b,
+        ExclusiveOr => return a ^ b,
     }
 }
 
-pub fn test_logic_immediate(
-    memory: &mut Memory,
-    processor: &mut Processor,
-    operation: LogicalOperations,
-) -> () {
+pub fn test_logic_immediate(operation: LogicalOperations) -> () {
     const EXPECTED_CYCLES: u32 = 2;
+    let (mut memory, mut processor) = setup();
     let opcode = match operation {
-        LogicalOperations::And => AND_IMMEDIATE,
-        LogicalOperations::ExclusiveOr => EOR_IMMEDIATE,
-        LogicalOperations::Or => OR_IMMEDIATE,
+        And => AND_IMMEDIATE,
+        ExclusiveOr => EOR_IMMEDIATE,
+        Or => OR_IMMEDIATE,
     };
 
     processor.cycles = EXPECTED_CYCLES;
@@ -42,7 +31,7 @@ pub fn test_logic_immediate(
     memory.data[0xFFFC] = opcode;
     memory.data[0xFFFD] = 0x84;
 
-    let cycles = processor.execute(memory);
+    let cycles = processor.execute(&mut memory);
 
     verify_register(
         &processor,
@@ -50,19 +39,16 @@ pub fn test_logic_immediate(
         complete_logic_op(0xCC, 0x84, operation),
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
-    verify_lda_flags(processor);
+    verify_lda_flags(&mut processor);
 }
 
-pub fn test_logic_zero_page(
-    memory: &mut Memory,
-    processor: &mut Processor,
-    operation: LogicalOperations,
-) -> () {
+pub fn test_logic_zero_page(operation: LogicalOperations) -> () {
     const EXPECTED_CYCLES: u32 = 3;
+    let (mut memory, mut processor) = setup();
     let opcode = match operation {
-        LogicalOperations::And => AND_IMMEDIATE,
-        LogicalOperations::ExclusiveOr => EOR_IMMEDIATE,
-        LogicalOperations::Or => OR_IMMEDIATE,
+        And => AND_ZERO_PAGE,
+        ExclusiveOr => EOR_ZERO_PAGE,
+        Or => OR_ZERO_PAGE,
     };
 
     memory.data[0xFFFC] = opcode;
@@ -71,7 +57,7 @@ pub fn test_logic_zero_page(
 
     processor.cycles = EXPECTED_CYCLES;
     processor.accumulator = 0xCC;
-    let cycles = processor.execute(memory);
+    let cycles = processor.execute(&mut memory);
 
     verify_register(
         &processor,
@@ -79,20 +65,16 @@ pub fn test_logic_zero_page(
         complete_logic_op(0xCC, 0x84, operation),
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
-    verify_lda_flags(processor);
+    verify_lda_flags(&mut processor);
 }
 
-pub fn test_logic_zero_page_x(
-    memory: &mut Memory,
-    processor: &mut Processor,
-    operation: LogicalOperations,
-    register_to_set: Option<Registers>,
-) -> () {
+pub fn test_logic_zero_page_x(operation: LogicalOperations) -> () {
     const EXPECTED_CYCLES: u32 = 4;
+    let (mut memory, mut processor) = setup();
     let opcode = match operation {
-        LogicalOperations::And => AND_ZERO_PAGE_X,
-        LogicalOperations::ExclusiveOr => EOR_ZERO_PAGE_X,
-        LogicalOperations::Or => OR_ZERO_PAGE_X,
+        And => AND_ZERO_PAGE_X,
+        ExclusiveOr => EOR_ZERO_PAGE_X,
+        Or => OR_ZERO_PAGE_X,
     };
 
     memory.data[0xFFFC] = opcode;
@@ -100,15 +82,10 @@ pub fn test_logic_zero_page_x(
     memory.data[0xFFFD] = 0x42;
     memory.data[0x0047] = 0x84;
 
-    match register_to_set {
-        Some(Registers::RegisterX) => processor.register_x = 5,
-        Some(Registers::RegisterY) => processor.register_y = 5,
-        _ => {}
-    }
-
-    processor.cycles = EXPECTED_CYCLES;
+    processor.register_x = 5;
     processor.accumulator = 0xCC;
-    let cycles = processor.execute(memory);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
 
     verify_register(
         &processor,
@@ -116,19 +93,16 @@ pub fn test_logic_zero_page_x(
         complete_logic_op(0xCC, 0x84, operation),
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
-    verify_lda_flags(processor);
+    verify_lda_flags(&mut processor);
 }
 
-pub fn test_logic_absolute(
-    memory: &mut Memory,
-    processor: &mut Processor,
-    operation: LogicalOperations,
-) -> () {
+pub fn test_logic_absolute(operation: LogicalOperations) -> () {
     const EXPECTED_CYCLES: u32 = 4;
+    let (mut memory, mut processor) = setup();
     let opcode = match operation {
-        LogicalOperations::And => AND_ABSOLUTE,
-        LogicalOperations::ExclusiveOr => EOR_ABSOLUTE,
-        LogicalOperations::Or => OR_ABSOLUTE,
+        And => AND_ABSOLUTE,
+        ExclusiveOr => EOR_ABSOLUTE,
+        Or => OR_ABSOLUTE,
     };
 
     memory.data[0xFFFC] = opcode;
@@ -138,7 +112,7 @@ pub fn test_logic_absolute(
 
     processor.cycles = EXPECTED_CYCLES;
     processor.accumulator = 0xCC;
-    let cycles = processor.execute(memory);
+    let cycles = processor.execute(&mut memory);
 
     verify_register(
         &processor,
@@ -146,28 +120,24 @@ pub fn test_logic_absolute(
         complete_logic_op(0xCC, 0x84, operation),
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
-    verify_lda_flags(processor);
+    verify_lda_flags(&mut processor);
 }
 
-pub fn test_logic_absolute_register(
-    memory: &mut Memory,
-    processor: &mut Processor,
-    opcode: u8,
-    register_to_set: Option<Registers>,
-) -> () {
-    let expected_cycles: u32 = 4;
+pub fn test_logic_absolute_register(opcode: u8, register_to_set: Registers) -> () {
+    let (mut memory, mut processor) = setup();
+    const EXPECTED_CYCLES: u32 = 4;
     let operation = match opcode {
-        OR_ABSOLUTE_X | OR_ABSOLUTE_Y => LogicalOperations::Or,
-        EOR_ABSOLUTE_X | EOR_ABSOLUTE_Y => LogicalOperations::ExclusiveOr,
-        _ => LogicalOperations::And,
+        OR_ABSOLUTE_X | OR_ABSOLUTE_Y => Or,
+        EOR_ABSOLUTE_X | EOR_ABSOLUTE_Y => ExclusiveOr,
+        _ => And,
     };
 
     memory.data[0xFFFC] = opcode;
     memory.data[0xFFFE] = 0x44; // 0x4480
 
     match register_to_set {
-        Some(Registers::RegisterX) => processor.register_x = 1,
-        Some(Registers::RegisterY) => processor.register_y = 1,
+        RegisterX => processor.register_x = 1,
+        RegisterY => processor.register_y = 1,
         _ => {}
     }
 
@@ -175,25 +145,25 @@ pub fn test_logic_absolute_register(
     memory.data[0x4481] = 0x84;
 
     processor.accumulator = 0xCC;
-    processor.cycles = expected_cycles;
-    let cycles = processor.execute(memory);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
 
     verify_register(
         &processor,
         Accumulator,
         complete_logic_op(0xCC, 0x84, operation),
     );
-    verify_cycles(cycles, expected_cycles as i64);
-    verify_lda_flags(processor);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+    verify_lda_flags(&mut processor);
 }
 
 pub fn test_logic_indirect_x(operation: LogicalOperations) -> () {
     let (mut memory, mut processor) = setup();
     const EXPECTED_CYCLES: u32 = 6;
     let opcode = match operation {
-        LogicalOperations::And => AND_INDIRECT_X,
-        LogicalOperations::ExclusiveOr => EOR_INDIRECT_X,
-        LogicalOperations::Or => OR_INDIRECT_X,
+        And => AND_INDIRECT_X,
+        ExclusiveOr => EOR_INDIRECT_X,
+        Or => OR_INDIRECT_X,
     };
 
     processor.accumulator = 0xCC;
@@ -214,15 +184,16 @@ pub fn test_logic_indirect_x(operation: LogicalOperations) -> () {
         complete_logic_op(0xCC, 0x84, operation),
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
+    verify_lda_flags(&mut processor);
 }
 
 pub fn test_logic_indirect_y(operation: LogicalOperations) -> () {
     let (mut memory, mut processor) = setup();
-    const EXPECTED_CYCLES: u32 = 6;
+    const EXPECTED_CYCLES: u32 = 5;
     let opcode = match operation {
-        LogicalOperations::And => AND_INDIRECT_Y,
-        LogicalOperations::ExclusiveOr => EOR_INDIRECT_Y,
-        LogicalOperations::Or => OR_INDIRECT_Y,
+        And => AND_INDIRECT_Y,
+        ExclusiveOr => EOR_INDIRECT_Y,
+        Or => OR_INDIRECT_Y,
     };
 
     processor.accumulator = 0xCC;
@@ -243,4 +214,5 @@ pub fn test_logic_indirect_y(operation: LogicalOperations) -> () {
         complete_logic_op(0xCC, 0x84, operation),
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
+    verify_lda_flags(&mut processor);
 }

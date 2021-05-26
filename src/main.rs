@@ -3,7 +3,10 @@ mod cpu;
 mod mem;
 mod tests;
 
+use crate::cpu::opcodes::Registers::*;
 use crate::tests::registers::*;
+use cpu::opcodes::LogicalOperations::*;
+use cpu::opcodes::*;
 use mem::*;
 
 use load::lda::{self, *};
@@ -15,6 +18,7 @@ use store::stx::{self, *};
 use store::sty::{self, *};
 
 use crate::tests::jumps::{self, *};
+use crate::tests::logical::{self, *};
 use crate::tests::stackops::{self, *};
 
 fn main() {
@@ -110,4 +114,18 @@ fn main() {
     println!("PLA               PASSED");
     stackops::Test::pull_status_from_stack();
     println!("PLP               PASSED");
+    println!("     STACK FULL PASS \n");
+
+    logical::test_logic_immediate(And);
+    println!("AND IMMEDIATE     PASSED");
+    logical::test_logic_zero_page(And);
+    logical::test_logic_zero_page_x(And);
+    println!("AND ZERO PAGE     PASSED");
+    logical::test_logic_absolute(And);
+    logical::test_logic_absolute_register(AND_ABSOLUTE_X, RegisterX);
+    logical::test_logic_absolute_register(AND_ABSOLUTE_Y, RegisterY);
+    println!("AND ABSOLUTE      PASSED");
+    logical::test_logic_indirect_x(And);
+    logical::test_logic_indirect_y(And);
+    println!("AND INDIRECT Y    PASSED");
 }
