@@ -206,6 +206,25 @@ impl Functions for Processor {
                 AND_ABSOLUTE_Y => self.logic_absolute(memory, And, Some(RegisterY)),
                 AND_INDIRECT_X => self.logic_indirect_x(memory, And),
                 AND_INDIRECT_Y => self.logic_indirect_y(memory, And),
+
+                OR_IMMEDIATE => self.logic_immediate(memory, Or),
+                OR_ZERO_PAGE => self.logic_zero_page(memory, Or, None),
+                OR_ZERO_PAGE_X => self.logic_zero_page(memory, Or, Some(RegisterX)),
+                OR_ABSOLUTE => self.logic_absolute(memory, Or, None),
+                OR_ABSOLUTE_X => self.logic_absolute(memory, Or, Some(RegisterX)),
+                OR_ABSOLUTE_Y => self.logic_absolute(memory, Or, Some(RegisterY)),
+                OR_INDIRECT_X => self.logic_indirect_x(memory, Or),
+                OR_INDIRECT_Y => self.logic_indirect_y(memory, Or),
+
+                EOR_IMMEDIATE => self.logic_immediate(memory, ExclusiveOr),
+                EOR_ZERO_PAGE => self.logic_zero_page(memory, ExclusiveOr, None),
+                EOR_ZERO_PAGE_X => self.logic_zero_page(memory, ExclusiveOr, Some(RegisterX)),
+                EOR_ABSOLUTE => self.logic_absolute(memory, ExclusiveOr, None),
+                EOR_ABSOLUTE_X => self.logic_absolute(memory, ExclusiveOr, Some(RegisterX)),
+                EOR_ABSOLUTE_Y => self.logic_absolute(memory, ExclusiveOr, Some(RegisterY)),
+                EOR_INDIRECT_X => self.logic_indirect_x(memory, ExclusiveOr),
+                EOR_INDIRECT_Y => self.logic_indirect_y(memory, ExclusiveOr),
+
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return origin_cycles as i64 - self.cycles as i64;

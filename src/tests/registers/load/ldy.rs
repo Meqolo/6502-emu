@@ -3,88 +3,72 @@ use crate::cpu::opcodes::Registers::*;
 use crate::cpu::opcodes::*;
 use crate::tests::common::*;
 
-pub struct Test {}
+pub fn immediate() -> () {
+    let (mut memory, mut processor) = setup();
 
-pub trait LDYTests {
-    fn immediate() -> ();
-
-    fn zero_page() -> ();
-    fn zero_page_x() -> ();
-    fn zero_page_x_overflow() -> ();
-
-    fn absolute() -> ();
-    fn absolute_x() -> ();
-    fn absolute_x_overflow() -> ();
+    test_register_immediate(&mut memory, &mut processor, RegisterY, LDY_IMMEDIATE);
 }
 
-impl LDYTests for Test {
-    fn immediate() -> () {
-        let (mut memory, mut processor) = setup();
+pub fn zero_page() -> () {
+    let (mut memory, mut processor) = setup();
 
-        test_register_immediate(&mut memory, &mut processor, RegisterY, LDY_IMMEDIATE);
-    }
+    test_register_zero_page(&mut memory, &mut processor, RegisterY, LDY_ZERO_PAGE);
+}
 
-    fn zero_page() -> () {
-        let (mut memory, mut processor) = setup();
+pub fn zero_page_x() -> () {
+    let (mut memory, mut processor) = setup();
 
-        test_register_zero_page(&mut memory, &mut processor, RegisterY, LDY_ZERO_PAGE);
-    }
+    test_register_zero_page_register(
+        &mut memory,
+        &mut processor,
+        RegisterY,
+        LDY_ZERO_PAGE_X,
+        Some(RegisterX),
+        false,
+    );
+}
 
-    fn zero_page_x() -> () {
-        let (mut memory, mut processor) = setup();
+pub fn zero_page_x_overflow() -> () {
+    let (mut memory, mut processor) = setup();
 
-        test_register_zero_page_register(
-            &mut memory,
-            &mut processor,
-            RegisterY,
-            LDY_ZERO_PAGE_X,
-            Some(RegisterX),
-            false,
-        );
-    }
+    test_register_zero_page_register(
+        &mut memory,
+        &mut processor,
+        RegisterY,
+        LDY_ZERO_PAGE_X,
+        Some(RegisterX),
+        true,
+    );
+}
 
-    fn zero_page_x_overflow() -> () {
-        let (mut memory, mut processor) = setup();
+pub fn absolute() -> () {
+    let (mut memory, mut processor) = setup();
 
-        test_register_zero_page_register(
-            &mut memory,
-            &mut processor,
-            RegisterY,
-            LDY_ZERO_PAGE_X,
-            Some(RegisterX),
-            true,
-        );
-    }
+    test_register_absolute(&mut memory, &mut processor, RegisterY, LDY_ABSOLUTE);
+}
 
-    fn absolute() -> () {
-        let (mut memory, mut processor) = setup();
+pub fn absolute_x() -> () {
+    let (mut memory, mut processor) = setup();
 
-        test_register_absolute(&mut memory, &mut processor, RegisterY, LDY_ABSOLUTE);
-    }
+    test_register_absolute_register(
+        &mut memory,
+        &mut processor,
+        RegisterY,
+        LDY_ABSOLUTE_X,
+        Some(RegisterX),
+        false,
+    );
+}
 
-    fn absolute_x() -> () {
-        let (mut memory, mut processor) = setup();
+pub fn absolute_x_overflow() -> () {
+    let (mut memory, mut processor) = setup();
 
-        test_register_absolute_register(
-            &mut memory,
-            &mut processor,
-            RegisterY,
-            LDY_ABSOLUTE_X,
-            Some(RegisterX),
-            false,
-        );
-    }
-
-    fn absolute_x_overflow() -> () {
-        let (mut memory, mut processor) = setup();
-
-        test_register_absolute_register(
-            &mut memory,
-            &mut processor,
-            RegisterY,
-            LDY_ABSOLUTE_X,
-            Some(RegisterX),
-            true,
-        );
-    }
+    test_register_absolute_register(
+        &mut memory,
+        &mut processor,
+        RegisterY,
+        LDY_ABSOLUTE_X,
+        Some(RegisterX),
+        true,
+    );
 }
