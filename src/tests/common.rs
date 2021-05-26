@@ -1,7 +1,6 @@
 use crate::cpu::opcodes::ProcessorStatus::{self, *};
 use crate::cpu::opcodes::Registers;
 use crate::cpu::processor::*;
-use crate::tests::registers::store::sta;
 use crate::{Memory, MAX_MEMORY};
 use Registers::*;
 
