@@ -56,3 +56,10 @@ pub const JSR: u8 = 0x20;
 pub const RTS: u8 = 0x60;
 pub const JMP_ABSOLUTE: u8 = 0x4C;
 pub const JMP_INDIRECT: u8 = 0x6C;
+
+pub const TSX: u8 = 0xBA;
+pub const TXS: u8 = 0x9A;
+pub const PHA: u8 = 0x48;
+pub const PHP: u8 = 0x08;
+pub const PLA: u8 = 0x68;
+pub const PLP: u8 = 0x28;

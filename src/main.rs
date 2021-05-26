@@ -15,6 +15,7 @@ use store::stx::{self, *};
 use store::sty::{self, *};
 
 use crate::tests::jumps::{self, *};
+use crate::tests::stackops::{self, *};
 
 fn main() {
     // Rust inbuilt tests not used as they clutter the output and are hard to read if a test fails
@@ -96,4 +97,17 @@ fn main() {
     jumps::Test::jump_indirect();
     println!("JMP INDIRECT      PASSED");
     println!("     JUMPS FULL PASS \n");
+
+    stackops::Test::transfer_stack_to_x();
+    stackops::Test::transfer_stack_to_x_flag();
+    println!("TSX               PASSED");
+    stackops::Test::transfer_x_to_stack();
+    println!("TXS               PASSED");
+    stackops::Test::push_accumulator_to_stack();
+    stackops::Test::push_status_to_stack();
+    println!("PUSH TO STACK     PASSED");
+    stackops::Test::pull_accumulator_from_stack();
+    println!("PLA               PASSED");
+    stackops::Test::pull_status_from_stack();
+    println!("PLP               PASSED");
 }

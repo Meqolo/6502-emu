@@ -1,6 +1,5 @@
-use crate::cpu::opcodes::ProcessorStatus::*;
+use crate::cpu::functions::stack::*;
 use crate::cpu::processor::{Functions, Processor};
-use crate::fetch_bit;
 use crate::mem::Memory;
 
 use super::addressing::Addressing;

@@ -1,9 +1,11 @@
+use super::instructions::jumps::*;
 use super::instructions::registers::load::*; // lda, ldx, ldy
 use super::instructions::registers::store::*; // sta, stx, sty
+use super::instructions::stackops::*; // tsx // jsr, rts, jmp
 
-use super::instructions::jumps::*;
 use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu::opcodes::Registers::*;
+use crate::mem;
 use crate::{fetch_bit, set_bit, Memory, MAX_MEMORY};
 use std::fmt;
 
@@ -39,9 +41,6 @@ impl fmt::UpperHex for Processor {
 
 pub trait Functions {
     fn increment_pc(&mut self) -> ();
-    fn push_pc_to_stack(&mut self, memory: &mut Memory) -> ();
-    fn stack_pointer_to_address(&mut self) -> u16;
-    fn pop_word_from_stack(&mut self, memory: &mut Memory) -> u16;
 
     fn reset(&mut self, memory: &mut Memory, reset_vector: u16) -> ();
     fn set_status(&mut self, flag: ProcessorStatus, value: bool) -> ();
@@ -62,23 +61,6 @@ pub trait Functions {
 impl Functions for Processor {
     fn increment_pc(&mut self) -> () {
         self.program_counter = self.program_counter.wrapping_add(1);
-    }
-
-    fn push_pc_to_stack(&mut self, memory: &mut Memory) -> () {
-        let sp_addr: u16 = self.stack_pointer_to_address() - 1;
-        self.write_word(memory, self.program_counter - 1, sp_addr);
-        self.stack_pointer -= 2;
-    }
-
-    fn stack_pointer_to_address(&mut self) -> u16 {
-        return 0x100 | self.stack_pointer as u16;
-    }
-
-    fn pop_word_from_stack(&mut self, memory: &mut Memory) -> u16 {
-        let sp_addr: u16 = self.stack_pointer_to_address() + 1;
-        self.stack_pointer += 2;
-        self.cycles -= 1;
-        return self.read_word(memory, sp_addr);
     }
 
     fn reset(&mut self, memory: &mut Memory, reset_vector: u16) -> () {
@@ -207,6 +189,13 @@ impl Functions for Processor {
                 RTS => self.rts(memory),
                 JMP_ABSOLUTE => self.jump_absolute(memory),
                 JMP_INDIRECT => self.jump_indirect(memory),
+
+                TSX => self.tsx(),
+                TXS => self.txs(),
+                PHA => self.pha(memory),
+                PHP => self.php(memory),
+                PLA => self.pla(memory),
+                PLP => self.plp(memory),
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return origin_cycles as i64 - self.cycles as i64;
