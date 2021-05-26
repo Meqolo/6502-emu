@@ -100,7 +100,7 @@ impl StackOperationTests for Test {
         const EXPECTED_CYCLES: u32 = 3;
         let (mut memory, mut processor) = setup();
         processor.reset(&mut memory, 0xFF00);
-        processor.processor_status = 0b10010110;
+        processor.status = 0b10010110;
 
         memory.data[0xFF00] = PHP;
 
@@ -109,7 +109,7 @@ impl StackOperationTests for Test {
 
         assert_eq!(
             memory.data[processor.stack_pointer_to_address() as usize + 1], // function decrements stack pointer so value on stack is at sp+1
-            processor.processor_status,
+            processor.status,
             "Processor status has not been pushed onto the stack"
         );
         verify_cycles(cycles, EXPECTED_CYCLES as i64);
@@ -147,7 +147,7 @@ impl StackOperationTests for Test {
         let cycles = processor.execute(&mut memory);
 
         assert_eq!(
-            processor.processor_status, 0x20,
+            processor.status, 0x20,
             "Processor status is not equal to 0x20"
         );
         verify_cycles(cycles, EXPECTED_CYCLES as i64);

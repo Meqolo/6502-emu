@@ -16,7 +16,7 @@ pub struct Processor {
     pub accumulator: u8,
     pub register_x: u8,
     pub register_y: u8,
-    pub processor_status: u8,
+    pub status: u8,
     pub cycles: u32,
 }
 
@@ -66,7 +66,7 @@ impl Functions for Processor {
     fn reset(&mut self, memory: &mut Memory, reset_vector: u16) -> () {
         self.program_counter = reset_vector;
         self.stack_pointer = 0xFF;
-        self.processor_status = 0;
+        self.status = 0;
         self.accumulator = 0;
         self.register_x = 0;
         self.register_y = 0;
@@ -75,25 +75,25 @@ impl Functions for Processor {
 
     fn set_status(&mut self, flag: ProcessorStatus, value: bool) -> () {
         match flag {
-            CarryFlag => self.processor_status = set_bit(self.processor_status, 0, value),
-            ZeroFlag => self.processor_status = set_bit(self.processor_status, 1, value),
-            InterruptDisable => self.processor_status = set_bit(self.processor_status, 2, value),
-            DecimalMode => self.processor_status = set_bit(self.processor_status, 3, value),
-            BreakCommand => self.processor_status = set_bit(self.processor_status, 4, value),
-            OverflowFlag => self.processor_status = set_bit(self.processor_status, 6, value),
-            NegativeFlag => self.processor_status = set_bit(self.processor_status, 7, value),
+            CarryFlag => self.status = set_bit(self.status, 0, value),
+            ZeroFlag => self.status = set_bit(self.status, 1, value),
+            InterruptDisable => self.status = set_bit(self.status, 2, value),
+            DecimalMode => self.status = set_bit(self.status, 3, value),
+            BreakCommand => self.status = set_bit(self.status, 4, value),
+            OverflowFlag => self.status = set_bit(self.status, 6, value),
+            NegativeFlag => self.status = set_bit(self.status, 7, value),
         }
     }
 
     fn fetch_status(&self, flag: ProcessorStatus) -> bool {
         match flag {
-            CarryFlag => return fetch_bit(self.processor_status, 0),
-            ZeroFlag => return fetch_bit(self.processor_status, 1),
-            InterruptDisable => return fetch_bit(self.processor_status, 2),
-            DecimalMode => return fetch_bit(self.processor_status, 3),
-            BreakCommand => return fetch_bit(self.processor_status, 4),
-            OverflowFlag => return fetch_bit(self.processor_status, 6),
-            NegativeFlag => return fetch_bit(self.processor_status, 7),
+            CarryFlag => return fetch_bit(self.status, 0),
+            ZeroFlag => return fetch_bit(self.status, 1),
+            InterruptDisable => return fetch_bit(self.status, 2),
+            DecimalMode => return fetch_bit(self.status, 3),
+            BreakCommand => return fetch_bit(self.status, 4),
+            OverflowFlag => return fetch_bit(self.status, 6),
+            NegativeFlag => return fetch_bit(self.status, 7),
         }
     }
 

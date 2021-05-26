@@ -15,7 +15,7 @@ pub fn setup() -> (Memory, Processor) {
         accumulator: 0,
         register_x: 0,
         register_y: 0,
-        processor_status: 0,
+        status: 0,
         cycles: 0,
     };
 

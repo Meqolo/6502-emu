@@ -34,7 +34,7 @@ impl StackOperations for Processor {
     }
 
     fn php(&mut self, memory: &mut Memory) -> () {
-        self.push_byte_to_stack(memory, self.processor_status);
+        self.push_byte_to_stack(memory, self.status);
     }
 
     fn pla(&mut self, memory: &mut Memory) -> () {
@@ -43,6 +43,6 @@ impl StackOperations for Processor {
     }
 
     fn plp(&mut self, memory: &mut Memory) -> () {
-        self.processor_status = self.pop_byte_from_stack(memory);
+        self.status = self.pop_byte_from_stack(memory);
     }
 }
