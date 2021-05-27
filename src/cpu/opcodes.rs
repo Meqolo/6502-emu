@@ -112,3 +112,10 @@ pub const INC_ZERO_PAGE: u8 = 0xE6;
 pub const INC_ZERO_PAGE_X: u8 = 0xF6;
 pub const INC_ABSOLUTE: u8 = 0xEE;
 pub const INC_ABSOLUTE_X: u8 = 0xFE;
+
+pub const DEX: u8 = 0xCA;
+pub const DEY: u8 = 0x88;
+pub const DEC_ZERO_PAGE: u8 = 0xC6;
+pub const DEC_ZERO_PAGE_X: u8 = 0xD6;
+pub const DEC_ABSOLUTE: u8 = 0xCE;
+pub const DEC_ABSOLUTE_X: u8 = 0xDE;

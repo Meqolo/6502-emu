@@ -9,6 +9,7 @@ use load::{lda, ldx, ldy};
 use store::{sta, stx, sty};
 use tests::registers::*;
 
+use tests::decrement;
 use tests::increment;
 use tests::jumps;
 use tests::logical;
@@ -186,4 +187,16 @@ pub fn run() {
     increment::increment_memory_absolute_x();
     println!("INC ABSOLUTE      PASSED");
     println!("  INCREMENTS FULL PASS \n");
+
+    decrement::decrement_x();
+    println!("DEX               PASSED");
+    decrement::decrement_y();
+    println!("DEY               PASSED");
+    decrement::decrement_memory_zero_page();
+    decrement::decrement_memory_zero_page_x();
+    println!("DEC ZERO PAGE     PASSED");
+    decrement::decrement_memory_absolute();
+    decrement::decrement_memory_absolute_x();
+    println!("DEC ABSOLUTE      PASSED");
+    println!("  DECREMENTS FULL PASS \n");
 }

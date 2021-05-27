@@ -1,16 +1,17 @@
 use super::instructions;
-use super::instructions::increment::Increment;
-use super::instructions::transfers::Transfers;
 use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu;
 use crate::mem::*;
 use std::fmt;
 
-use instructions::jumps::*;
-use instructions::logical::Logical;
+use instructions::decrement::*; // dec, dex, dey
+use instructions::increment::*; // inc, inx, iny
+use instructions::jumps::*; // jsr, rts, jmp
+use instructions::logical::*; // eor, or, and
 use instructions::registers::load::*; // lda, ldx, ldy
 use instructions::registers::store::*; // sta, stx, sty
-use instructions::stackops::*; // tsx // jsr, rts, jmp
+use instructions::stackops::*; // tsx, txs, pha, php, pla, plp
+use instructions::transfers::*; // jsr, rts, jmp
 
 use cpu::functions::byte::*;
 use cpu::opcodes::LogicalOperations::*;
@@ -222,6 +223,13 @@ impl Functions for Processor {
                 INC_ZERO_PAGE_X => self.increment_memory_zero_page(memory, Some(RegisterX)),
                 INC_ABSOLUTE => self.increment_memory_absolute(memory, None),
                 INC_ABSOLUTE_X => self.increment_memory_absolute(memory, Some(RegisterX)),
+
+                DEX => self.decrement_x(),
+                DEY => self.decrement_y(),
+                DEC_ZERO_PAGE => self.decrement_memory_zero_page(memory, None),
+                DEC_ZERO_PAGE_X => self.decrement_memory_zero_page(memory, Some(RegisterX)),
+                DEC_ABSOLUTE => self.decrement_memory_absolute(memory, None),
+                DEC_ABSOLUTE_X => self.decrement_memory_absolute(memory, Some(RegisterX)),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
