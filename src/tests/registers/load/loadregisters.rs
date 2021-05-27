@@ -1,7 +1,9 @@
-use crate::cpu::opcodes::Registers;
-use crate::cpu::processor::*;
+use crate::cpu;
 use crate::tests::common::*;
 use crate::Memory;
+
+use cpu::opcodes::Registers;
+use cpu::processor::*;
 
 pub fn test_register_immediate(
     memory: &mut Memory,

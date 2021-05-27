@@ -1,11 +1,13 @@
-use crate::cpu::opcodes::LogicalOperations::{self, *};
-use crate::cpu::opcodes::ProcessorStatus::*;
-use crate::cpu::opcodes::Registers::{self, *};
-use crate::cpu::processor::{Functions, Processor};
-use crate::mem::*;
-
 use super::addressing::Addressing;
 use super::registers::load::LoadRegister;
+use crate::cpu;
+use crate::mem::*;
+
+use cpu::functions::byte::*;
+use cpu::opcodes::LogicalOperations::{self, *};
+use cpu::opcodes::ProcessorStatus::*;
+use cpu::opcodes::Registers::{self, *};
+use cpu::processor::{Functions, Processor};
 
 fn complete_logic_op(a: u8, b: u8, operation: LogicalOperations) -> u8 {
     match operation {

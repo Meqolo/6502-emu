@@ -1,7 +1,9 @@
 use super::common::*;
-use crate::cpu::opcodes::Registers::*;
-use crate::cpu::opcodes::*;
-use crate::cpu::processor::*;
+use crate::cpu;
+
+use cpu::opcodes::Registers::*;
+use cpu::opcodes::*;
+use cpu::processor::*;
 
 pub fn jump_subroutine_return() -> () {
     const EXPECTED_CYCLES: u32 = 14;

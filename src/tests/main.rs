@@ -1,14 +1,18 @@
-use crate::cpu::opcodes::LogicalOperations::*;
-use crate::cpu::opcodes::Registers::*;
-use crate::cpu::opcodes::*;
-use crate::tests::registers::*;
+use crate::cpu;
+use crate::tests;
+
+use cpu::opcodes::LogicalOperations::*;
+use cpu::opcodes::Registers::*;
+use cpu::opcodes::*;
 
 use load::{lda, ldx, ldy};
 use store::{sta, stx, sty};
+use tests::registers::*;
 
-use crate::tests::jumps;
-use crate::tests::logical;
-use crate::tests::stackops;
+use tests::jumps;
+use tests::logical;
+use tests::programs::test::*;
+use tests::stackops;
 
 pub fn run() {
     // Rust inbuilt tests not used as they clutter the output and are hard to read if a test fails
@@ -152,4 +156,7 @@ pub fn run() {
     logical::test_bit_absolute();
     println!("BIT ABSOLUTE      PASSED");
     println!("       BIT FULL PASS \n");
+
+    test_program();
+    println!("TEST PROGRAM      PASSED");
 }

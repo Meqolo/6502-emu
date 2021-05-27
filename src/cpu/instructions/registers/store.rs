@@ -1,7 +1,10 @@
-use crate::cpu::instructions::addressing::*;
-use crate::cpu::opcodes::Registers::{self, *};
-use crate::cpu::processor::*;
+use crate::cpu;
 use crate::Memory;
+
+use cpu::functions::byte::*;
+use cpu::instructions::addressing::*;
+use cpu::opcodes::Registers::{self, *};
+use cpu::processor::*;
 
 pub trait StoreRegister {
     fn store_zero_page(

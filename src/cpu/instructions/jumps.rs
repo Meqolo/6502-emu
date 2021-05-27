@@ -1,8 +1,10 @@
-use crate::cpu::functions::stack::*;
-use crate::cpu::processor::{Functions, Processor};
+use super::addressing::*;
+use crate::cpu;
 use crate::mem::Memory;
 
-use super::addressing::Addressing;
+use cpu::functions::stack::*;
+use cpu::functions::word::*;
+use cpu::processor::*;
 
 pub trait Jumps {
     fn jsr(&mut self, memory: &mut Memory) -> ();

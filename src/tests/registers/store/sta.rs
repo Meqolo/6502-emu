@@ -1,9 +1,11 @@
 use super::storeregisters::*;
-use crate::cpu::opcodes;
-use crate::cpu::opcodes::Registers::*;
-use crate::cpu::opcodes::*;
-use crate::cpu::processor::*;
+use crate::cpu;
 use crate::tests::common::*;
+
+use cpu::opcodes;
+use cpu::opcodes::Registers::*;
+use cpu::opcodes::*;
+use cpu::processor::*;
 
 pub fn zero_page() -> () {
     let (mut memory, mut processor) = setup();

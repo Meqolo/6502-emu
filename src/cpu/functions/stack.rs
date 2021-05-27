@@ -1,5 +1,9 @@
+use crate::cpu::functions;
 use crate::cpu::processor::*;
 use crate::Memory;
+
+use functions::byte::*;
+use functions::word::*;
 
 pub trait StackFunctions {
     fn push_pc_to_stack(&mut self, memory: &mut Memory) -> ();

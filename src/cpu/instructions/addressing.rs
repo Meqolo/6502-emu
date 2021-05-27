@@ -1,6 +1,10 @@
-use crate::cpu::opcodes::Registers::{self, *};
-use crate::cpu::processor::*;
+use crate::cpu;
 use crate::Memory;
+
+use cpu::functions::byte::*;
+use cpu::functions::word::*;
+use cpu::opcodes::Registers::{self, *};
+use cpu::processor::*;
 
 pub trait Addressing {
     fn addr_zero_page(&mut self, memory: &Memory, offset_register: Option<Registers>) -> u16;

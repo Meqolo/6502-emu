@@ -1,14 +1,18 @@
-use super::instructions::jumps::*;
-use super::instructions::logical::Logical;
-use super::instructions::registers::load::*; // lda, ldx, ldy
-use super::instructions::registers::store::*; // sta, stx, sty
-use super::instructions::stackops::*; // tsx // jsr, rts, jmp
-
+use super::instructions;
 use super::opcodes::{ProcessorStatus::*, *};
-use crate::cpu::opcodes::LogicalOperations::*;
-use crate::cpu::opcodes::Registers::*;
-use crate::{fetch_bit, set_bit, Memory, MAX_MEMORY};
+use crate::cpu;
+use crate::mem::*;
 use std::fmt;
+
+use instructions::jumps::*;
+use instructions::logical::Logical;
+use instructions::registers::load::*; // lda, ldx, ldy
+use instructions::registers::store::*; // sta, stx, sty
+use instructions::stackops::*; // tsx // jsr, rts, jmp
+
+use cpu::functions::byte::*;
+use cpu::opcodes::LogicalOperations::*;
+use cpu::opcodes::Registers::*;
 
 #[derive(Debug)]
 pub struct Processor {
@@ -47,15 +51,7 @@ pub trait Functions {
     fn set_status(&mut self, flag: ProcessorStatus, value: bool) -> ();
     fn fetch_status(&self, flag: ProcessorStatus) -> bool;
 
-    fn read_word(&mut self, memory: &Memory, address: u16) -> u16;
-    fn read_byte(&mut self, memory: &Memory, address: u16) -> u8;
-
-    fn fetch_byte(&mut self, memory: &Memory) -> u8;
-    fn fetch_word(&mut self, memory: &Memory) -> u16;
-
-    fn write_word(&mut self, memory: &mut Memory, data: u16, address: u16) -> ();
-    fn write_byte(&mut self, memory: &mut Memory, data: u8, address: u16) -> ();
-
+    fn load_program(&mut self, memory: &mut Memory, program: &[u8]) -> u16;
     fn execute(&mut self, memory: &mut Memory) -> i64;
 }
 
@@ -98,54 +94,35 @@ impl Functions for Processor {
         }
     }
 
-    fn fetch_byte(&mut self, memory: &Memory) -> u8 {
-        let data: u8 = memory.data[self.program_counter as usize];
-        self.increment_pc();
-        self.cycles -= 1;
-        return data;
-    }
+    fn load_program(&mut self, memory: &mut Memory, program: &[u8]) -> u16 {
+        let program_length = program.len();
+        if program_length > 2 {
+            let mut position = 0;
 
-    fn fetch_word(&mut self, memory: &Memory) -> u16 {
-        let mut data = memory.data[self.program_counter as usize] as u16;
-        self.program_counter += 1;
+            let load_low_byte: u8 = program[position];
+            let load_high_byte: u8 = program[position + 1];
+            let load_address: u16 = load_low_byte as u16 | ((load_high_byte as u16) << 8);
 
-        data |= (memory.data[self.program_counter as usize] as u16) << 8;
-        data = data.to_le();
-        self.program_counter += 1;
-        self.cycles -= 2;
+            let final_index: u16 = load_address + (program_length as u16 - 2);
 
-        return data;
-    }
+            position = 2;
 
-    fn read_byte(&mut self, memory: &Memory, address: u16) -> u8 {
-        let data: u8 = memory.data[address as usize];
-        self.cycles -= 1;
-        return data;
-    }
+            for index in load_address..final_index {
+                memory.data[index as usize] = program[position];
+                position += 1;
+            }
 
-    fn read_word(&mut self, memory: &Memory, address: u16) -> u16 {
-        let low_byte: u8 = self.read_byte(memory, address);
-        let high_byte: u8 = self.read_byte(memory, address + 1);
-        return low_byte as u16 | ((high_byte as u16) << 8);
-    }
+            return load_address;
+        }
 
-    fn write_word(&mut self, memory: &mut Memory, data: u16, address: u16) -> () {
-        let bytes: [u8; 2] = data.to_le_bytes();
-
-        memory.data[address as usize] = bytes[0];
-        memory.data[(address as usize) + 1] = bytes[1];
-        self.cycles -= 2
-    }
-
-    fn write_byte(&mut self, memory: &mut Memory, data: u8, address: u16) -> () {
-        memory.data[address as usize] = data;
-        self.cycles -= 1;
+        return 0x200;
     }
 
     fn execute(&mut self, memory: &mut Memory) -> i64 {
         let origin_cycles: u32 = self.cycles.clone();
+        let mut unknown_instruction_hit: bool = false;
 
-        while self.cycles > 0 {
+        while self.cycles > 0 && unknown_instruction_hit == false {
             let instruction: u8 = self.fetch_byte(&memory);
 
             match instruction {
@@ -230,7 +207,8 @@ impl Functions for Processor {
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
-                    return origin_cycles as i64 - self.cycles as i64;
+                    // unknown_instruction_hit = true;
+                    return (origin_cycles as i64 + 1) - self.cycles as i64;
                 }
             }
         }

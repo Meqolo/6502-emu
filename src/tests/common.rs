@@ -1,8 +1,9 @@
-use crate::cpu::opcodes::ProcessorStatus::{self, *};
-use crate::cpu::opcodes::Registers;
-use crate::cpu::processor::*;
-use crate::{Memory, MAX_MEMORY};
-use Registers::*;
+use crate::cpu;
+use crate::mem::*;
+
+use cpu::opcodes::ProcessorStatus::{self, *};
+use cpu::opcodes::Registers::{self, *};
+use cpu::processor::*;
 
 pub fn setup() -> (Memory, Processor) {
     let mut memory = Memory {

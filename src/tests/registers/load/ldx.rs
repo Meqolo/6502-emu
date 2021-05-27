@@ -1,7 +1,9 @@
 use super::loadregisters::*;
-use crate::cpu::opcodes::Registers::*;
-use crate::cpu::opcodes::*;
+use crate::cpu;
 use crate::tests::common::*;
+
+use cpu::opcodes::Registers::*;
+use cpu::opcodes::*;
 
 pub fn immediate() -> () {
     let (mut memory, mut processor) = setup();

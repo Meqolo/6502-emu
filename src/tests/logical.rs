@@ -1,10 +1,11 @@
-use crate::cpu::opcodes::*;
-use crate::cpu::processor::Functions;
+use crate::cpu;
 use crate::tests::common::*;
 
-use LogicalOperations::*;
-use ProcessorStatus::*;
-use Registers::{self, *};
+use cpu::opcodes::LogicalOperations::*;
+use cpu::opcodes::ProcessorStatus::*;
+use cpu::opcodes::Registers::*;
+use cpu::opcodes::*;
+use cpu::processor::Functions;
 
 pub fn complete_logic_op(a: u8, b: u8, operation: LogicalOperations) -> u8 {
     match operation {

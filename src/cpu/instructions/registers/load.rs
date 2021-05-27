@@ -1,8 +1,11 @@
-use crate::cpu::instructions::addressing::*;
-use crate::cpu::opcodes::ProcessorStatus::*;
-use crate::cpu::opcodes::Registers::{self, *};
-use crate::cpu::processor::*;
-use crate::{fetch_bit, Memory};
+use crate::cpu;
+use crate::mem::*;
+
+use cpu::functions::byte::*;
+use cpu::instructions::addressing::*;
+use cpu::opcodes::ProcessorStatus::*;
+use cpu::opcodes::Registers::{self, *};
+use cpu::processor::*;
 
 pub trait LoadRegister {
     fn set_register(&mut self, register: Registers, value: u8) -> ();

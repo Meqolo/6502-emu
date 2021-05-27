@@ -1,9 +1,11 @@
 use super::common::*;
-use crate::cpu::functions::stack::StackFunctions;
-use crate::cpu::opcodes::ProcessorStatus::*;
-use crate::cpu::opcodes::Registers::*;
-use crate::cpu::opcodes::*;
-use crate::cpu::processor::Functions;
+use crate::cpu;
+
+use cpu::functions::stack::StackFunctions;
+use cpu::opcodes::ProcessorStatus::*;
+use cpu::opcodes::Registers::*;
+use cpu::opcodes::*;
+use cpu::processor::Functions;
 
 pub fn transfer_stack_to_x() -> () {
     const EXPECTED_CYCLES: u32 = 2;

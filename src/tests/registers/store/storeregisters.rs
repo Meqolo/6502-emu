@@ -1,7 +1,9 @@
-use crate::cpu::opcodes::Registers::{self, *};
-use crate::cpu::processor::*;
+use crate::cpu;
 use crate::tests::common::*;
 use crate::Memory;
+
+use cpu::opcodes::Registers::{self, *};
+use cpu::processor::*;
 
 pub fn test_register_zero_page(
     memory: &mut Memory,

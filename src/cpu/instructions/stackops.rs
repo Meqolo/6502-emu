@@ -1,9 +1,10 @@
-use crate::cpu::processor::Processor;
+use super::registers::load::LoadRegister;
+use crate::cpu;
 use crate::mem::Memory;
 
-use super::registers::load::LoadRegister;
-use crate::cpu::functions::stack::*;
-use crate::cpu::opcodes::Registers::*;
+use cpu::functions::stack::*;
+use cpu::opcodes::Registers::*;
+use cpu::processor::Processor;
 
 pub trait StackOperations {
     fn tsx(&mut self) -> ();
