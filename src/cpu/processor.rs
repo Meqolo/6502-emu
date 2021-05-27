@@ -1,4 +1,5 @@
 use super::instructions;
+use super::instructions::increment::Increment;
 use super::instructions::transfers::Transfers;
 use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu;
@@ -214,6 +215,13 @@ impl Functions for Processor {
                 TAY => self.transfer_accumulator_to_y(),
                 TXA => self.transfer_x_to_accumulator(),
                 TYA => self.transfer_y_to_accumulator(),
+
+                INX => self.increment_x(),
+                INY => self.increment_y(),
+                INC_ZERO_PAGE => self.increment_memory_zero_page(memory, None),
+                INC_ZERO_PAGE_X => self.increment_memory_zero_page(memory, Some(RegisterX)),
+                INC_ABSOLUTE => self.increment_memory_absolute(memory, None),
+                INC_ABSOLUTE_X => self.increment_memory_absolute(memory, Some(RegisterX)),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);

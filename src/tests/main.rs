@@ -9,6 +9,7 @@ use load::{lda, ldx, ldy};
 use store::{sta, stx, sty};
 use tests::registers::*;
 
+use tests::increment;
 use tests::jumps;
 use tests::logical;
 use tests::programs::test::*;
@@ -173,4 +174,16 @@ pub fn run() {
     transfers::transfer_x_to_accumulator();
     println!("TYX               PASSED");
     println!("   TRANSFERS FULL PASS \n");
+
+    increment::increment_x();
+    println!("INX               PASSED");
+    increment::increment_y();
+    println!("INY               PASSED");
+    increment::increment_memory_zero_page();
+    increment::increment_memory_zero_page_x();
+    println!("INC ZERO PAGE     PASSED");
+    increment::increment_memory_absolute();
+    increment::increment_memory_absolute_x();
+    println!("INC ABSOLUTE      PASSED");
+    println!("  INCREMENTS FULL PASS \n");
 }

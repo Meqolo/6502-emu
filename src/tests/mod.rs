@@ -1,4 +1,5 @@
 pub mod common;
+pub mod increment;
 pub mod jumps;
 pub mod logical;
 pub mod main;

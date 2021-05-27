@@ -105,3 +105,10 @@ pub const TAX: u8 = 0xAA;
 pub const TAY: u8 = 0xA8;
 pub const TXA: u8 = 0x8A;
 pub const TYA: u8 = 0x98;
+
+pub const INX: u8 = 0xE8;
+pub const INY: u8 = 0xC8;
+pub const INC_ZERO_PAGE: u8 = 0xE6;
+pub const INC_ZERO_PAGE_X: u8 = 0xF6;
+pub const INC_ABSOLUTE: u8 = 0xEE;
+pub const INC_ABSOLUTE_X: u8 = 0xFE;
