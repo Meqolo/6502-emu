@@ -5,3 +5,4 @@ pub mod main;
 pub mod programs;
 pub mod registers;
 pub mod stackops;
+pub mod transfers;

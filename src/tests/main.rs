@@ -13,6 +13,7 @@ use tests::jumps;
 use tests::logical;
 use tests::programs::test::*;
 use tests::stackops;
+use tests::transfers;
 
 pub fn run_programs() {
     println!("6502 EXAMPLE PROGRAMS");
@@ -162,4 +163,14 @@ pub fn run() {
     logical::test_bit_absolute();
     println!("BIT ABSOLUTE      PASSED");
     println!("       BIT FULL PASS \n");
+
+    transfers::transfer_accumulator_to_x();
+    println!("TAX               PASSED");
+    transfers::transfer_accumulator_to_y();
+    println!("TAY               PASSED");
+    transfers::transfer_y_to_accumulator();
+    println!("TYA               PASSED");
+    transfers::transfer_x_to_accumulator();
+    println!("TYX               PASSED");
+    println!("   TRANSFERS FULL PASS \n");
 }

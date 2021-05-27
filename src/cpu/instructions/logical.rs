@@ -98,8 +98,6 @@ impl Logical for Processor {
         let zero_page_addr = self.addr_zero_page(memory, None);
         let value = self.read_byte(memory, zero_page_addr);
 
-        println!("{:#0010b}", value);
-
         self.set_status(ZeroFlag, self.accumulator & value == 0);
         self.set_status(OverflowFlag, fetch_bit(value, 6));
         self.set_status(NegativeFlag, fetch_bit(value, 7))

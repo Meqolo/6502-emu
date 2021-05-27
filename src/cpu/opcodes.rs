@@ -100,3 +100,8 @@ pub const OR_INDIRECT_Y: u8 = 0x11;
 
 pub const BIT_ZERO_PAGE: u8 = 0x24;
 pub const BIT_ABSOLUTE: u8 = 0x2C;
+
+pub const TAX: u8 = 0xAA;
+pub const TAY: u8 = 0xA8;
+pub const TXA: u8 = 0x8A;
+pub const TYA: u8 = 0x98;

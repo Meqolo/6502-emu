@@ -14,7 +14,7 @@ fn main() {
     match io::stdin().read_line(&mut stdin_buffer) {
         Ok(_n) => {
             println!("\n\n");
-            if stdin_buffer == "1" {
+            if stdin_buffer.contains("1") {
                 tests::main::run();
             } else {
                 tests::main::run_programs();

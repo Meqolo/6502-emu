@@ -1,4 +1,5 @@
 use super::instructions;
+use super::instructions::transfers::Transfers;
 use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu;
 use crate::mem::*;
@@ -208,6 +209,11 @@ impl Functions for Processor {
 
                 BIT_ZERO_PAGE => self.bit_zero_page(memory),
                 BIT_ABSOLUTE => self.bit_absolute(memory),
+
+                TAX => self.transfer_accumulator_to_x(),
+                TAY => self.transfer_accumulator_to_y(),
+                TXA => self.transfer_x_to_accumulator(),
+                TYA => self.transfer_y_to_accumulator(),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
