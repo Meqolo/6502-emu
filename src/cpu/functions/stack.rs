@@ -25,7 +25,7 @@ impl StackFunctions for Processor {
         self.write_byte(memory, value, stack_addr);
 
         self.stack_pointer -= 1;
-        self.cycles -= 1;
+        self.decrement_cycles(1);
     }
 
     fn stack_pointer_to_address(&mut self) -> u16 {
@@ -35,14 +35,14 @@ impl StackFunctions for Processor {
     fn pop_word_from_stack(&mut self, memory: &mut Memory) -> u16 {
         let sp_addr: u16 = self.stack_pointer_to_address() + 1;
         self.stack_pointer += 2;
-        self.cycles -= 1;
+        self.decrement_cycles(1);
         return self.read_word(memory, sp_addr);
     }
 
     fn pop_byte_from_stack(&mut self, memory: &mut Memory) -> u8 {
         self.stack_pointer += 1;
         let sp_addr: u16 = self.stack_pointer_to_address();
-        self.cycles -= 2;
+        self.decrement_cycles(2);
         return self.read_byte(memory, sp_addr);
     }
 }

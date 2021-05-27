@@ -4,6 +4,7 @@ use crate::mem::Memory;
 
 use cpu::functions::stack::*;
 use cpu::opcodes::Registers::*;
+use cpu::processor::Functions;
 use cpu::processor::Processor;
 
 pub trait StackOperations {
@@ -22,12 +23,12 @@ impl StackOperations for Processor {
         let stack_pointer: u8 = self.stack_pointer;
         self.set_register(RegisterX, stack_pointer);
 
-        self.cycles -= 1;
+        self.decrement_cycles(1);
     }
 
     fn txs(&mut self) -> () {
         self.stack_pointer = self.register_x;
-        self.cycles -= 1;
+        self.decrement_cycles(1);
     }
 
     fn pha(&mut self, memory: &mut Memory) -> () {

@@ -14,6 +14,12 @@ use tests::logical;
 use tests::programs::test::*;
 use tests::stackops;
 
+pub fn run_programs() {
+    println!("6502 EXAMPLE PROGRAMS");
+    test_program();
+    println!("TEST PROGRAM      PASSED");
+}
+
 pub fn run() {
     // Rust inbuilt tests not used as they clutter the output and are hard to read if a test fails
     println!("6502 TEST SUITE");
@@ -156,7 +162,4 @@ pub fn run() {
     logical::test_bit_absolute();
     println!("BIT ABSOLUTE      PASSED");
     println!("       BIT FULL PASS \n");
-
-    test_program();
-    println!("TEST PROGRAM      PASSED");
 }

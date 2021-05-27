@@ -46,6 +46,7 @@ impl fmt::UpperHex for Processor {
 
 pub trait Functions {
     fn increment_pc(&mut self) -> ();
+    fn decrement_cycles(&mut self, amount: u32) -> ();
 
     fn reset(&mut self, memory: &mut Memory, reset_vector: u16) -> ();
     fn set_status(&mut self, flag: ProcessorStatus, value: bool) -> ();
@@ -58,6 +59,10 @@ pub trait Functions {
 impl Functions for Processor {
     fn increment_pc(&mut self) -> () {
         self.program_counter = self.program_counter.wrapping_add(1);
+    }
+
+    fn decrement_cycles(&mut self, amount: u32) -> () {
+        self.cycles = self.cycles.saturating_sub(amount);
     }
 
     fn reset(&mut self, memory: &mut Memory, reset_vector: u16) -> () {
@@ -120,9 +125,8 @@ impl Functions for Processor {
 
     fn execute(&mut self, memory: &mut Memory) -> i64 {
         let origin_cycles: u32 = self.cycles.clone();
-        let mut unknown_instruction_hit: bool = false;
 
-        while self.cycles > 0 && unknown_instruction_hit == false {
+        while self.cycles > 0 {
             let instruction: u8 = self.fetch_byte(&memory);
 
             match instruction {
@@ -207,7 +211,6 @@ impl Functions for Processor {
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
-                    // unknown_instruction_hit = true;
                     return (origin_cycles as i64 + 1) - self.cycles as i64;
                 }
             }

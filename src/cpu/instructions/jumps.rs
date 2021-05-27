@@ -20,13 +20,13 @@ impl Jumps for Processor {
         self.push_pc_to_stack(memory);
         self.program_counter = sub_addr;
 
-        self.cycles -= 1;
+        self.decrement_cycles(1);
     }
 
     fn rts(&mut self, memory: &mut Memory) -> () {
         let return_addr: u16 = self.pop_word_from_stack(memory);
         self.program_counter = return_addr + 1;
-        self.cycles -= 2;
+        self.decrement_cycles(2);
     }
 
     fn jump_absolute(&mut self, memory: &mut Memory) -> () {

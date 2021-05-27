@@ -56,7 +56,7 @@ impl StoreRegister for Processor {
         }
 
         match offset_register {
-            Some(RegisterX) | Some(RegisterY) => self.cycles -= 1,
+            Some(RegisterX) | Some(RegisterY) => self.decrement_cycles(1),
             _ => {}
         }
     }
@@ -71,6 +71,6 @@ impl StoreRegister for Processor {
         let indirect_addr: u16 = self.addr_indirect_y(memory);
 
         self.write_byte(memory, self.accumulator, indirect_addr);
-        self.cycles -= 1;
+        self.decrement_cycles(1);
     }
 }

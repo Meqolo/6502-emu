@@ -18,7 +18,7 @@ impl WordFunctions for Processor {
         data |= (memory.data[self.program_counter as usize] as u16) << 8;
         data = data.to_le();
         self.program_counter += 1;
-        self.cycles -= 2;
+        self.decrement_cycles(2);
 
         return data;
     }
@@ -34,6 +34,6 @@ impl WordFunctions for Processor {
 
         memory.data[address as usize] = bytes[0];
         memory.data[(address as usize) + 1] = bytes[1];
-        self.cycles -= 2
+        self.decrement_cycles(2);
     }
 }
