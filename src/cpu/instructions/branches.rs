@@ -1,11 +1,7 @@
-use super::addressing::*;
 use crate::cpu;
 use crate::cpu::functions::byte::ByteFunctions;
 use crate::mem::Memory;
 
-use cpu::functions::stack::*;
-use cpu::functions::word::*;
-use cpu::opcodes::ProcessorStatus::*;
 use cpu::processor::*;
 
 pub trait Branches {

@@ -1,5 +1,3 @@
-use std::ops::Neg;
-
 use super::common::*;
 use crate::cpu;
 
