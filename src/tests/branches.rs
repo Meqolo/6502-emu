@@ -1,3 +1,5 @@
+use std::ops::Neg;
+
 use super::common::*;
 use crate::cpu;
 
@@ -46,5 +48,102 @@ pub fn branch_if_equal_backwards() -> () {
     let cycles = processor.execute(&mut memory);
 
     verify_program_counter(&processor, 0xFFCC);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+}
+
+pub fn branch_if_not_equal() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 4] = [0x00, 0xFF, BNE, 0x03];
+    let (mut memory, mut processor) = setup();
+
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
+
+    verify_program_counter(&processor, 0xFF05);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+}
+
+pub fn branch_if_carry_set() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 4] = [0x00, 0xFF, BCS, 0x03];
+    let (mut memory, mut processor) = setup();
+
+    processor.set_status(CarryFlag, true);
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
+
+    verify_program_counter(&processor, 0xFF05);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+}
+
+pub fn branch_if_carry_clear() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 4] = [0x00, 0xFF, BCC, 0x03];
+    let (mut memory, mut processor) = setup();
+
+    processor.set_status(CarryFlag, false);
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
+
+    verify_program_counter(&processor, 0xFF05);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+}
+
+pub fn branch_if_overflow_set() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 4] = [0x00, 0xFF, BVS, 0x03];
+    let (mut memory, mut processor) = setup();
+
+    processor.set_status(OverflowFlag, true);
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
+
+    verify_program_counter(&processor, 0xFF05);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+}
+
+pub fn branch_if_overflow_clear() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 4] = [0x00, 0xFF, BVC, 0x03];
+    let (mut memory, mut processor) = setup();
+
+    processor.set_status(OverflowFlag, false);
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
+
+    verify_program_counter(&processor, 0xFF05);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+}
+
+pub fn branch_if_negative_set() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 4] = [0x00, 0xFF, BMI, 0x03];
+    let (mut memory, mut processor) = setup();
+
+    processor.set_status(NegativeFlag, true);
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
+
+    verify_program_counter(&processor, 0xFF05);
+    verify_cycles(cycles, EXPECTED_CYCLES as i64);
+}
+
+pub fn branch_if_negative_clear() -> () {
+    const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 4] = [0x00, 0xFF, BPL, 0x03];
+    let (mut memory, mut processor) = setup();
+
+    processor.set_status(NegativeFlag, false);
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
+    processor.cycles = EXPECTED_CYCLES;
+    let cycles = processor.execute(&mut memory);
+
+    verify_program_counter(&processor, 0xFF05);
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
 }

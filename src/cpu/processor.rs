@@ -1,6 +1,5 @@
 use super::instructions;
 use super::instructions::branches::Branches;
-use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu;
 use crate::mem::*;
 use std::fmt;
@@ -16,7 +15,9 @@ use instructions::transfers::*; // jsr, rts, jmp
 
 use cpu::functions::byte::*;
 use cpu::opcodes::LogicalOperations::*;
+use cpu::opcodes::ProcessorStatus::*;
 use cpu::opcodes::Registers::*;
+use cpu::opcodes::*;
 
 #[derive(Debug)]
 pub struct Processor {
@@ -235,7 +236,14 @@ impl Functions for Processor {
                 DEC_ABSOLUTE => self.decrement_memory_absolute(memory, None),
                 DEC_ABSOLUTE_X => self.decrement_memory_absolute(memory, Some(RegisterX)),
 
-                BEQ => self.branch_if_equal(memory),
+                BEQ => self.branch(memory, self.fetch_status(ZeroFlag)),
+                BNE => self.branch(memory, self.fetch_status(ZeroFlag) == false),
+                BCS => self.branch(memory, self.fetch_status(CarryFlag)),
+                BCC => self.branch(memory, self.fetch_status(CarryFlag) == false),
+                BMI => self.branch(memory, self.fetch_status(NegativeFlag)),
+                BPL => self.branch(memory, self.fetch_status(NegativeFlag) == false),
+                BVS => self.branch(memory, self.fetch_status(OverflowFlag)),
+                BVC => self.branch(memory, self.fetch_status(OverflowFlag) == false),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);

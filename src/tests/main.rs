@@ -205,4 +205,19 @@ pub fn run() {
     branches::branch_if_equal_cross();
     branches::branch_if_equal_backwards();
     println!("BEQ               PASSED");
+    branches::branch_if_not_equal();
+    println!("BNE               PASSED");
+    branches::branch_if_carry_set();
+    println!("BCS               PASSED");
+    branches::branch_if_carry_clear();
+    println!("BCC               PASSED");
+    branches::branch_if_negative_set();
+    println!("BMI               PASSED");
+    branches::branch_if_negative_clear();
+    println!("BPL               PASSED");
+    branches::branch_if_overflow_set();
+    println!("BVS               PASSED");
+    branches::branch_if_overflow_clear();
+    println!("BVC               PASSED");
+    println!("   BRANCHES FULL PASS \n");
 }
