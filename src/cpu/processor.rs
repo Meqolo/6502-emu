@@ -1,4 +1,5 @@
 use super::instructions;
+use super::instructions::branches::Branches;
 use super::opcodes::{ProcessorStatus::*, *};
 use crate::cpu;
 use crate::mem::*;
@@ -65,6 +66,9 @@ impl Functions for Processor {
     }
 
     fn decrement_cycles(&mut self, amount: u32) -> () {
+        if self.cycles == 0 {
+            println!("Cycles overflowed");
+        }
         self.cycles = self.cycles.saturating_sub(amount);
     }
 
@@ -230,6 +234,8 @@ impl Functions for Processor {
                 DEC_ZERO_PAGE_X => self.decrement_memory_zero_page(memory, Some(RegisterX)),
                 DEC_ABSOLUTE => self.decrement_memory_absolute(memory, None),
                 DEC_ABSOLUTE_X => self.decrement_memory_absolute(memory, Some(RegisterX)),
+
+                BEQ => self.branch_if_equal(memory),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);

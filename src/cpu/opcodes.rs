@@ -119,3 +119,12 @@ pub const DEC_ZERO_PAGE: u8 = 0xC6;
 pub const DEC_ZERO_PAGE_X: u8 = 0xD6;
 pub const DEC_ABSOLUTE: u8 = 0xCE;
 pub const DEC_ABSOLUTE_X: u8 = 0xDE;
+
+pub const BCC: u8 = 0x90;
+pub const BCS: u8 = 0xB0;
+pub const BEQ: u8 = 0xF0;
+pub const BMI: u8 = 0x30;
+pub const BNE: u8 = 0xD0;
+pub const BPL: u8 = 0x10;
+pub const BVC: u8 = 0x50;
+pub const BVS: u8 = 0x70;

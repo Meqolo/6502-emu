@@ -9,6 +9,7 @@ use load::{lda, ldx, ldy};
 use store::{sta, stx, sty};
 use tests::registers::*;
 
+use tests::branches;
 use tests::decrement;
 use tests::increment;
 use tests::jumps;
@@ -199,4 +200,9 @@ pub fn run() {
     decrement::decrement_memory_absolute_x();
     println!("DEC ABSOLUTE      PASSED");
     println!("  DECREMENTS FULL PASS \n");
+
+    branches::branch_if_equal();
+    branches::branch_if_equal_cross();
+    branches::branch_if_equal_backwards();
+    println!("BEQ               PASSED");
 }

@@ -1,4 +1,5 @@
 pub mod addressing;
+pub mod branches;
 pub mod decrement;
 pub mod increment;
 pub mod jumps;
