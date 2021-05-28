@@ -9,12 +9,11 @@ use cpu::processor::Functions;
 
 pub fn transfer_stack_to_x() -> () {
     const EXPECTED_CYCLES: u32 = 2;
+    const PROGRAM: [u8; 3] = [0x00, 0xFF, TSX];
     let (mut memory, mut processor) = setup();
-    processor.reset(&mut memory, 0xFF00);
+
     processor.stack_pointer = 0x01;
-
-    memory.data[0xFF00] = TSX;
-
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
     processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
@@ -27,12 +26,11 @@ pub fn transfer_stack_to_x() -> () {
 
 pub fn transfer_stack_to_x_flag() -> () {
     const EXPECTED_CYCLES: u32 = 2;
+    const PROGRAM: [u8; 3] = [0x00, 0xFF, TSX];
     let (mut memory, mut processor) = setup();
-    processor.reset(&mut memory, 0xFF00);
+
     processor.stack_pointer = 0x0;
-
-    memory.data[0xFF00] = TSX;
-
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
     processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
@@ -44,13 +42,12 @@ pub fn transfer_stack_to_x_flag() -> () {
 
 pub fn transfer_x_to_stack() -> () {
     const EXPECTED_CYCLES: u32 = 2;
+    const PROGRAM: [u8; 3] = [0x00, 0xFF, TXS];
     let (mut memory, mut processor) = setup();
-    processor.reset(&mut memory, 0xFF00);
+
     processor.stack_pointer = 0x01;
     processor.register_x = 0x15;
-
-    memory.data[0xFF00] = TXS;
-
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
     processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
@@ -66,12 +63,11 @@ pub fn transfer_x_to_stack() -> () {
 
 pub fn push_accumulator_to_stack() -> () {
     const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 3] = [0x00, 0xFF, PHA];
     let (mut memory, mut processor) = setup();
-    processor.reset(&mut memory, 0xFF00);
+
     processor.accumulator = 0x15;
-
-    memory.data[0xFF00] = PHA;
-
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
     processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
@@ -85,12 +81,11 @@ pub fn push_accumulator_to_stack() -> () {
 
 pub fn push_status_to_stack() -> () {
     const EXPECTED_CYCLES: u32 = 3;
+    const PROGRAM: [u8; 3] = [0x00, 0xFF, PHP];
     let (mut memory, mut processor) = setup();
-    processor.reset(&mut memory, 0xFF00);
+
     processor.status = 0b10010110;
-
-    memory.data[0xFF00] = PHP;
-
+    processor.program_counter = processor.load_program(&mut memory, &PROGRAM);
     processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
@@ -107,11 +102,11 @@ pub fn pull_accumulator_from_stack() -> () {
     let (mut memory, mut processor) = setup();
     processor.reset(&mut memory, 0xFF00);
     processor.stack_pointer = 0xFE;
+    processor.cycles = EXPECTED_CYCLES;
 
     memory.data[0xFF00] = PLA;
     memory.data[0x1FF] = 0x20; // Sets highest value on stack (0xFF) to 0x20
 
-    processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
     assert_eq!(
@@ -126,11 +121,11 @@ pub fn pull_status_from_stack() -> () {
     let (mut memory, mut processor) = setup();
     processor.reset(&mut memory, 0xFF00);
     processor.stack_pointer = 0xFE;
+    processor.cycles = EXPECTED_CYCLES;
 
     memory.data[0xFF00] = PLP;
     memory.data[0x1FF] = 0x20; // Sets highest value on stack (0xFF) to 0x20
 
-    processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
     assert_eq!(
