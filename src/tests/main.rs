@@ -5,8 +5,9 @@ use cpu::opcodes::LogicalOperations::*;
 use cpu::opcodes::Registers::*;
 use cpu::opcodes::*;
 
-use load::{lda, ldx, ldy};
-use store::{sta, stx, sty};
+use load::*;
+use store::*;
+use tests::arithmetic::*;
 use tests::registers::*;
 
 use tests::branches;
@@ -220,4 +221,13 @@ pub fn run() {
     branches::branch_if_overflow_clear();
     println!("BVC               PASSED");
     println!("   BRANCHES FULL PASS \n");
+
+    add::test_add_absolute_zero();
+    add::test_add_absolute_zero_carry();
+    add::test_add_absolute_zero_ff();
+    add::test_add_absolute_negative();
+    add::test_add_absolute_signed_negative_overflow();
+    add::test_add_absolute_signed_overflow();
+    add::test_add_absolute_unsigned();
+    println!("ADC ABSOLUTE      PASSED");
 }

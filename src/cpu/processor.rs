@@ -1,4 +1,5 @@
 use super::instructions;
+use super::instructions::arithmetic::add::AddWithCarry;
 use super::instructions::branches::Branches;
 use crate::cpu;
 use crate::mem::*;
@@ -244,6 +245,8 @@ impl Functions for Processor {
                 BPL => self.branch(memory, self.fetch_status(NegativeFlag) == false),
                 BVS => self.branch(memory, self.fetch_status(OverflowFlag)),
                 BVC => self.branch(memory, self.fetch_status(OverflowFlag) == false),
+
+                ADC_ABSOLUTE => self.adc_absolute(memory),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);

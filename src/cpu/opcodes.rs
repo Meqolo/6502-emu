@@ -128,3 +128,12 @@ pub const BNE: u8 = 0xD0;
 pub const BPL: u8 = 0x10;
 pub const BVC: u8 = 0x50;
 pub const BVS: u8 = 0x70;
+
+pub const ADC_IMMEDIATE: u8 = 0x69;
+pub const ADC_ZERO_PAGE: u8 = 0x65;
+pub const ADC_ZERO_PAGE_X: u8 = 0x75;
+pub const ADC_ABSOLUTE: u8 = 0x6D;
+pub const ADC_ABSOLUTE_X: u8 = 0x7D;
+pub const ADC_ABSOLUTE_Y: u8 = 0x79;
+pub const ADC_INDIRECT_X: u8 = 0x61;
+pub const ADC_INDIRECT_Y: u8 = 0x71;
