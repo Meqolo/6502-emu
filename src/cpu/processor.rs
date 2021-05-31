@@ -246,11 +246,18 @@ impl Functions for Processor {
                 BVS => self.branch(memory, self.fetch_status(OverflowFlag)),
                 BVC => self.branch(memory, self.fetch_status(OverflowFlag) == false),
 
-                ADC_ABSOLUTE => self.adc_absolute(memory),
+                ADC_IMMEDIATE => self.adc_immediate(memory),
+                ADC_ABSOLUTE => self.adc_absolute(memory, None),
+                ADC_ABSOLUTE_X => self.adc_absolute(memory, Some(RegisterX)),
+                ADC_ABSOLUTE_Y => self.adc_absolute(memory, Some(RegisterY)),
+                ADC_ZERO_PAGE => self.adc_zero_page(memory, None),
+                ADC_ZERO_PAGE_X => self.adc_zero_page(memory, Some(RegisterX)),
+                ADC_INDIRECT_X => self.adc_indirect_x(memory),
+                ADC_INDIRECT_Y => self.adc_indirect_y(memory),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
-                    return (origin_cycles as i64 + 1) - self.cycles as i64;
+                    return (origin_cycles as i64 - 1) - self.cycles as i64;
                 }
             }
         }

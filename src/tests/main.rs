@@ -1,5 +1,7 @@
 use crate::cpu;
 use crate::tests;
+use crate::tests::arithmetic::add::test_add_immediate;
+use crate::tests::arithmetic::add::test_add_indirect_x;
 
 use cpu::opcodes::LogicalOperations::*;
 use cpu::opcodes::Registers::*;
@@ -229,5 +231,17 @@ pub fn run() {
     add::test_add_absolute_signed_negative_overflow();
     add::test_add_absolute_signed_overflow();
     add::test_add_absolute_unsigned();
+    add::test_add_absolute_x();
+    add::test_add_absolute_y();
     println!("ADC ABSOLUTE      PASSED");
+    add::test_add_immediate();
+    println!("ADC IMMEDIATE     PASSED");
+    add::test_add_zero_page();
+    add::test_add_zero_page_x();
+    println!("ADC ZERO PAGE     PASSED");
+    add::test_add_indirect_x();
+    println!("ADC INDIRECT X    PASSED");
+    add::test_add_indirect_y();
+    println!("ADC INDIRECT Y    PASSED");
+    println!("        ADD FULL PASS \n");
 }
