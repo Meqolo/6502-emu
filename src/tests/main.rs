@@ -1,7 +1,5 @@
 use crate::cpu;
 use crate::tests;
-use crate::tests::arithmetic::add::test_add_immediate;
-use crate::tests::arithmetic::add::test_add_indirect_x;
 
 use cpu::opcodes::LogicalOperations::*;
 use cpu::opcodes::Registers::*;
@@ -14,6 +12,7 @@ use tests::registers::*;
 
 use tests::branches;
 use tests::decrement;
+use tests::flags;
 use tests::increment;
 use tests::jumps;
 use tests::logical;
@@ -244,4 +243,19 @@ pub fn run() {
     add::test_add_indirect_y();
     println!("ADC INDIRECT Y    PASSED");
     println!("        ADD FULL PASS \n");
+
+    flags::check_flag_change(CLC);
+    println!("CLC               PASSED");
+    flags::check_flag_change(CLD);
+    println!("CLD               PASSED");
+    flags::check_flag_change(CLI);
+    println!("CLI               PASSED");
+    flags::check_flag_change(CLV);
+    println!("CLV               PASSED");
+    flags::check_flag_change(SEC);
+    println!("SEC               PASSED");
+    flags::check_flag_change(SED);
+    println!("SED               PASSED");
+    flags::check_flag_change(SEI);
+    println!("SEI               PASSED");
 }

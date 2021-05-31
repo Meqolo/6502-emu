@@ -129,6 +129,14 @@ pub const BPL: u8 = 0x10;
 pub const BVC: u8 = 0x50;
 pub const BVS: u8 = 0x70;
 
+pub const CLC: u8 = 0x18;
+pub const CLD: u8 = 0xD8;
+pub const CLI: u8 = 0x58;
+pub const CLV: u8 = 0xB8;
+pub const SEC: u8 = 0x38;
+pub const SED: u8 = 0xF8;
+pub const SEI: u8 = 0x78;
+
 pub const ADC_IMMEDIATE: u8 = 0x69;
 pub const ADC_ZERO_PAGE: u8 = 0x65;
 pub const ADC_ZERO_PAGE_X: u8 = 0x75;

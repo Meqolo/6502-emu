@@ -2,6 +2,7 @@ pub mod arithmetic;
 pub mod branches;
 pub mod common;
 pub mod decrement;
+pub mod flags;
 pub mod increment;
 pub mod jumps;
 pub mod logical;

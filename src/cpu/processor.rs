@@ -246,6 +246,35 @@ impl Functions for Processor {
                 BVS => self.branch(memory, self.fetch_status(OverflowFlag)),
                 BVC => self.branch(memory, self.fetch_status(OverflowFlag) == false),
 
+                CLC => {
+                    self.set_status(CarryFlag, false);
+                    self.decrement_cycles(1);
+                }
+                CLD => {
+                    self.set_status(DecimalMode, false);
+                    self.decrement_cycles(1);
+                }
+                CLI => {
+                    self.set_status(InterruptDisable, false);
+                    self.decrement_cycles(1);
+                }
+                CLV => {
+                    self.set_status(OverflowFlag, false);
+                    self.decrement_cycles(1);
+                }
+                SEC => {
+                    self.set_status(CarryFlag, true);
+                    self.decrement_cycles(1);
+                }
+                SED => {
+                    self.set_status(DecimalMode, true);
+                    self.decrement_cycles(1);
+                }
+                SEI => {
+                    self.set_status(InterruptDisable, true);
+                    self.decrement_cycles(1);
+                }
+
                 ADC_IMMEDIATE => self.adc_immediate(memory),
                 ADC_ABSOLUTE => self.adc_absolute(memory, None),
                 ADC_ABSOLUTE_X => self.adc_absolute(memory, Some(RegisterX)),
