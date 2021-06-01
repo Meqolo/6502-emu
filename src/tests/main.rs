@@ -258,4 +258,22 @@ pub fn run() {
     println!("SED               PASSED");
     flags::check_flag_change(SEI);
     println!("SEI               PASSED");
+    println!("      FLAGS FULL PASS \n");
+
+    compare::compare_immediate_identical();
+    compare::compare_immediate_differing();
+    compare::compare_immediate_negative();
+    compare::compare_immediate_negative_result();
+    println!("CMP IMMEDIATE       PASSED");
+    compare::compare_zero_page();
+    compare::compare_zero_page_x();
+    println!("CMP ZERO PAGE       PASSED");
+    compare::compare_absolute();
+    compare::compare_absolute_x();
+    compare::compare_absolute_y();
+    println!("CMP ABSOLUTE        PASSED");
+    compare::compare_indirect_x();
+    compare::compare_indirect_y();
+    println!("CMP INDIRECT        PASSED");
+    println!("      COMPARE FULL PASS \n");
 }

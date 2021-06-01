@@ -145,3 +145,12 @@ pub const ADC_ABSOLUTE_X: u8 = 0x7D;
 pub const ADC_ABSOLUTE_Y: u8 = 0x79;
 pub const ADC_INDIRECT_X: u8 = 0x61;
 pub const ADC_INDIRECT_Y: u8 = 0x71;
+
+pub const CMP_IMMEDIATE: u8 = 0xC9;
+pub const CMP_ZERO_PAGE: u8 = 0xC5;
+pub const CMP_ZERO_PAGE_X: u8 = 0xD5;
+pub const CMP_ABSOLUTE: u8 = 0xCD;
+pub const CMP_ABSOLUTE_X: u8 = 0xDD;
+pub const CMP_ABSOLUTE_Y: u8 = 0xD9;
+pub const CMP_INDIRECT_X: u8 = 0xC1;
+pub const CMP_INDIRECT_Y: u8 = 0xD1;

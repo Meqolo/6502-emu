@@ -1,5 +1,6 @@
 use super::instructions;
 use super::instructions::arithmetic::add::AddWithCarry;
+use super::instructions::arithmetic::compare::Compare;
 use super::instructions::branches::Branches;
 use crate::cpu;
 use crate::mem::*;
@@ -129,7 +130,7 @@ impl Functions for Processor {
             return load_address;
         }
 
-        return 0x200;
+        return 0x200; // returns end of zero page
     }
 
     fn execute(&mut self, memory: &mut Memory) -> i64 {
@@ -283,6 +284,15 @@ impl Functions for Processor {
                 ADC_ZERO_PAGE_X => self.adc_zero_page(memory, Some(RegisterX)),
                 ADC_INDIRECT_X => self.adc_indirect_x(memory),
                 ADC_INDIRECT_Y => self.adc_indirect_y(memory),
+
+                CMP_IMMEDIATE => self.cmp_immediate(memory, Accumulator),
+                CMP_ABSOLUTE => self.cmp_absolute(memory, Accumulator, None),
+                CMP_ABSOLUTE_X => self.cmp_absolute(memory, Accumulator, Some(RegisterX)),
+                CMP_ABSOLUTE_Y => self.cmp_absolute(memory, Accumulator, Some(RegisterY)),
+                CMP_ZERO_PAGE => self.cmp_zero_page(memory, Accumulator, None),
+                CMP_ZERO_PAGE_X => self.cmp_zero_page(memory, Accumulator, Some(RegisterX)),
+                CMP_INDIRECT_X => self.cmp_indirect_x(memory, Accumulator),
+                CMP_INDIRECT_Y => self.cmp_indirect_y(memory, Accumulator),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
