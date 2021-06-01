@@ -292,4 +292,22 @@ pub fn run() {
     compare::compare_y_zero_page();
     println!("CPY ZERO PAGE       PASSED");
     println!("    COMPARE Y FULL PASS \n");
+
+    subtract::test_subtract_absolute_zero();
+    subtract::test_subtract_absolute_negative();
+    subtract::test_subtract_absolute_negative_carry();
+    subtract::test_subtract_absolute_signed_overflow();
+    subtract::test_subtract_absolute_zero_carry();
+    subtract::test_subtract_absolute_x();
+    subtract::test_subtract_absolute_y();
+    println!("SBC ABSOLUTE      PASSED");
+    subtract::test_subtract_immediate();
+    println!("SBC IMMEDIATE     PASSED");
+    subtract::test_subtract_zero_page();
+    subtract::test_subtract_zero_page_x();
+    println!("SBC ZERO PAGE     PASSED");
+    subtract::test_subtract_indirect_x();
+    subtract::test_subtract_indirect_y();
+    println!("SBC INDIRECT      PASSED");
+    println!("   SUBTRACT FULL PASS \n");
 }

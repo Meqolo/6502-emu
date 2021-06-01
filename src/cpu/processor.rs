@@ -1,6 +1,7 @@
 use super::instructions;
 use super::instructions::arithmetic::add::AddWithCarry;
 use super::instructions::arithmetic::compare::Compare;
+use super::instructions::arithmetic::subtract::SubtractWithCarry;
 use super::instructions::branches::Branches;
 use crate::cpu;
 use crate::mem::*;
@@ -247,6 +248,7 @@ impl Functions for Processor {
                 BVS => self.branch(memory, self.fetch_status(OverflowFlag)),
                 BVC => self.branch(memory, self.fetch_status(OverflowFlag) == false),
 
+                NOP => self.decrement_cycles(1),
                 CLC => {
                     self.set_status(CarryFlag, false);
                     self.decrement_cycles(1);
@@ -301,6 +303,15 @@ impl Functions for Processor {
                 CPY_IMMEDIATE => self.cmp_immediate(memory, RegisterY),
                 CPY_ZERO_PAGE => self.cmp_zero_page(memory, RegisterY, None),
                 CPY_ABSOLUTE => self.cmp_absolute(memory, RegisterY, None),
+
+                SBC_IMMEDIATE => self.sbc_immediate(memory),
+                SBC_ABSOLUTE => self.sbc_absolute(memory, None),
+                SBC_ABSOLUTE_X => self.sbc_absolute(memory, Some(RegisterX)),
+                SBC_ABSOLUTE_Y => self.sbc_absolute(memory, Some(RegisterY)),
+                SBC_ZERO_PAGE => self.sbc_zero_page(memory, None),
+                SBC_ZERO_PAGE_X => self.sbc_zero_page(memory, Some(RegisterX)),
+                SBC_INDIRECT_X => self.sbc_indirect_x(memory),
+                SBC_INDIRECT_Y => self.sbc_indirect_y(memory),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);

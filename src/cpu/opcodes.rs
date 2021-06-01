@@ -137,6 +137,15 @@ pub const SEC: u8 = 0x38;
 pub const SED: u8 = 0xF8;
 pub const SEI: u8 = 0x78;
 
+pub const SBC_IMMEDIATE: u8 = 0xE9;
+pub const SBC_ZERO_PAGE: u8 = 0xE5;
+pub const SBC_ZERO_PAGE_X: u8 = 0xF5;
+pub const SBC_ABSOLUTE: u8 = 0xED;
+pub const SBC_ABSOLUTE_X: u8 = 0xFD;
+pub const SBC_ABSOLUTE_Y: u8 = 0xF9;
+pub const SBC_INDIRECT_X: u8 = 0xE1;
+pub const SBC_INDIRECT_Y: u8 = 0xF1;
+
 pub const ADC_IMMEDIATE: u8 = 0x69;
 pub const ADC_ZERO_PAGE: u8 = 0x65;
 pub const ADC_ZERO_PAGE_X: u8 = 0x75;
@@ -162,3 +171,5 @@ pub const CPX_ABSOLUTE: u8 = 0xEC;
 pub const CPY_IMMEDIATE: u8 = 0xC0;
 pub const CPY_ZERO_PAGE: u8 = 0xC4;
 pub const CPY_ABSOLUTE: u8 = 0xCC;
+
+pub const NOP: u8 = 0xEA;
