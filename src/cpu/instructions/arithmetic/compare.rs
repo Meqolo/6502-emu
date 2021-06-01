@@ -8,15 +8,24 @@ use cpu::opcodes::Registers::{self, *};
 use cpu::processor::*;
 
 fn compare(processor: &mut Processor, operand: u8, register: Registers) -> () {
-    let result: u8 = match register {
-        Accumulator => processor.accumulator.wrapping_sub(operand),
-        RegisterX => processor.register_x.wrapping_sub(operand),
-        RegisterY => processor.register_y.wrapping_sub(operand),
-    };
+    let result: u8;
+    match register {
+        Accumulator => {
+            result = processor.accumulator.wrapping_sub(operand);
+            processor.set_status(CarryFlag, processor.accumulator >= operand);
+        }
+        RegisterX => {
+            result = processor.register_x.wrapping_sub(operand);
+            processor.set_status(CarryFlag, processor.register_x >= operand);
+        }
+        RegisterY => {
+            result = processor.register_y.wrapping_sub(operand);
+            processor.set_status(CarryFlag, processor.register_y >= operand);
+        }
+    }
 
-    processor.set_status(ZeroFlag, processor.accumulator == operand);
-    processor.set_status(CarryFlag, processor.accumulator >= operand);
-    processor.set_status(NegativeFlag, fetch_bit(result as u8, 7));
+    processor.set_status(ZeroFlag, result == 0);
+    processor.set_status(NegativeFlag, fetch_bit(result, 7));
 }
 
 pub trait Compare {

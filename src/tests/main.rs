@@ -276,4 +276,20 @@ pub fn run() {
     compare::compare_indirect_y();
     println!("CMP INDIRECT        PASSED");
     println!("      COMPARE FULL PASS \n");
+
+    compare::compare_x_immediate();
+    println!("CPX IMMEDIATE       PASSED");
+    compare::compare_x_absolute();
+    println!("CPX ABSOLUTE        PASSED");
+    compare::compare_x_zero_page();
+    println!("CPX ZERO PAGE       PASSED");
+    println!("    COMPARE X FULL PASS \n");
+
+    compare::compare_y_immediate();
+    println!("CPY IMMEDIATE       PASSED");
+    compare::compare_y_absolute();
+    println!("CPY ABSOLUTE        PASSED");
+    compare::compare_y_zero_page();
+    println!("CPY ZERO PAGE       PASSED");
+    println!("    COMPARE Y FULL PASS \n");
 }

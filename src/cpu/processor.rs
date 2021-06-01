@@ -294,6 +294,14 @@ impl Functions for Processor {
                 CMP_INDIRECT_X => self.cmp_indirect_x(memory, Accumulator),
                 CMP_INDIRECT_Y => self.cmp_indirect_y(memory, Accumulator),
 
+                CPX_IMMEDIATE => self.cmp_immediate(memory, RegisterX),
+                CPX_ZERO_PAGE => self.cmp_zero_page(memory, RegisterX, None),
+                CPX_ABSOLUTE => self.cmp_absolute(memory, RegisterX, None),
+
+                CPY_IMMEDIATE => self.cmp_immediate(memory, RegisterY),
+                CPY_ZERO_PAGE => self.cmp_zero_page(memory, RegisterY, None),
+                CPY_ABSOLUTE => self.cmp_absolute(memory, RegisterY, None),
+
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return (origin_cycles as i64 - 1) - self.cycles as i64;

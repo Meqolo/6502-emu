@@ -154,3 +154,11 @@ pub const CMP_ABSOLUTE_X: u8 = 0xDD;
 pub const CMP_ABSOLUTE_Y: u8 = 0xD9;
 pub const CMP_INDIRECT_X: u8 = 0xC1;
 pub const CMP_INDIRECT_Y: u8 = 0xD1;
+
+pub const CPX_IMMEDIATE: u8 = 0xE0;
+pub const CPX_ZERO_PAGE: u8 = 0xE4;
+pub const CPX_ABSOLUTE: u8 = 0xEC;
+
+pub const CPY_IMMEDIATE: u8 = 0xC0;
+pub const CPY_ZERO_PAGE: u8 = 0xC4;
+pub const CPY_ABSOLUTE: u8 = 0xCC;

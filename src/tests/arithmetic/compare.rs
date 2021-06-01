@@ -1,5 +1,4 @@
 use crate::cpu;
-use crate::mem;
 use crate::tests::common::*;
 
 use cpu::opcodes::ProcessorStatus::*;
@@ -31,11 +30,11 @@ fn test_compare(data: CompareStruct, opcode: u8) -> () {
     memory.data[0xFF00] = opcode;
 
     match opcode {
-        CMP_IMMEDIATE => {
+        CMP_IMMEDIATE | CPX_IMMEDIATE | CPY_IMMEDIATE => {
             expected_cycles = 2;
             memory.data[0xFF01] = data.operand;
         }
-        CMP_ZERO_PAGE => {
+        CMP_ZERO_PAGE | CPX_ZERO_PAGE | CPY_ZERO_PAGE => {
             expected_cycles = 3;
             memory.data[0xFF01] = 0x42;
             memory.data[0x0042] = data.operand;
@@ -45,7 +44,7 @@ fn test_compare(data: CompareStruct, opcode: u8) -> () {
             memory.data[0xFF01] = 0x42;
             memory.data[0x0042 + 10] = data.operand;
         }
-        CMP_ABSOLUTE => {
+        CMP_ABSOLUTE | CPX_ABSOLUTE | CPY_ABSOLUTE => {
             memory.data[0xFF01] = 0x00;
             memory.data[0xFF02] = 0x80;
             memory.data[0x8000] = data.operand;
@@ -243,5 +242,89 @@ pub fn compare_indirect_y() -> () {
             expect_negative: false,
         },
         CMP_INDIRECT_Y,
+    )
+}
+
+pub fn compare_x_immediate() -> () {
+    test_compare(
+        CompareStruct {
+            register: RegisterX,
+            operand: 26,
+            register_value: 48,
+            expect_carry: true,
+            expect_zero: false,
+            expect_negative: false,
+        },
+        CPX_IMMEDIATE,
+    )
+}
+
+pub fn compare_x_absolute() -> () {
+    test_compare(
+        CompareStruct {
+            register: RegisterX,
+            operand: 26,
+            register_value: 48,
+            expect_carry: true,
+            expect_zero: false,
+            expect_negative: false,
+        },
+        CPX_ABSOLUTE,
+    )
+}
+
+pub fn compare_x_zero_page() -> () {
+    test_compare(
+        CompareStruct {
+            register: RegisterX,
+            operand: 26,
+            register_value: 48,
+            expect_carry: true,
+            expect_zero: false,
+            expect_negative: false,
+        },
+        CPX_ZERO_PAGE,
+    )
+}
+
+pub fn compare_y_immediate() -> () {
+    test_compare(
+        CompareStruct {
+            register: RegisterY,
+            operand: 26,
+            register_value: 48,
+            expect_carry: true,
+            expect_zero: false,
+            expect_negative: false,
+        },
+        CPY_IMMEDIATE,
+    )
+}
+
+pub fn compare_y_absolute() -> () {
+    test_compare(
+        CompareStruct {
+            register: RegisterY,
+            operand: 26,
+            register_value: 48,
+            expect_carry: true,
+            expect_zero: false,
+            expect_negative: false,
+        },
+        CPY_ABSOLUTE,
+    )
+}
+
+pub fn compare_y_zero_page() -> () {
+    test_compare(
+        CompareStruct {
+            register: RegisterY,
+            operand: 26,
+            register_value: 48,
+            expect_carry: true,
+            expect_zero: false,
+            expect_negative: false,
+        },
+        CPY_ZERO_PAGE,
     )
 }
