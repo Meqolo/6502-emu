@@ -18,7 +18,7 @@ pub struct AddStruct {
 }
 
 fn test_add(data: AddStruct, opcode: u8) -> () {
-    let mut expected_cycles: u32 = 2;
+    let mut expected_cycles: u32 = 4;
     let (mut memory, mut processor) = setup();
 
     processor.reset(&mut memory, 0xFF00);

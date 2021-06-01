@@ -51,7 +51,10 @@ impl Decrement for Processor {
         let absolute_addr = self.addr_absolute(memory, offset_register);
         let value: u8 = self.read_byte(memory, absolute_addr).wrapping_sub(1);
         set_memory(self, memory, value, absolute_addr);
-        self.decrement_cycles(1);
+
+        if let Some(_) = offset_register {
+            self.decrement_cycles(1);
+        }
     }
 
     fn decrement_x(&mut self) -> () {
