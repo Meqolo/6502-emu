@@ -1,12 +1,8 @@
 use super::addressing::*;
-use super::registers::load::LoadRegister;
 use crate::cpu;
-use crate::cpu::functions::byte::ByteFunctions;
-use crate::mem::fetch_bit;
-use crate::mem::Memory;
+use crate::mem::*;
 
-use cpu::functions::stack::*;
-use cpu::functions::word::*;
+use cpu::functions::byte::*;
 use cpu::opcodes::ProcessorStatus::*;
 use cpu::opcodes::Registers::*;
 use cpu::opcodes::*;
