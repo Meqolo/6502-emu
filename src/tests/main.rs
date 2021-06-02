@@ -17,6 +17,7 @@ use tests::increment;
 use tests::jumps;
 use tests::logical;
 use tests::programs::test::*;
+use tests::shifts;
 use tests::stackops;
 use tests::transfers;
 
@@ -310,4 +311,24 @@ pub fn run() {
     subtract::test_subtract_indirect_y();
     println!("SBC INDIRECT      PASSED");
     println!("   SUBTRACT FULL PASS \n");
+
+    shifts::shift_left_accumulator();
+    println!("ASL ACCUMULATOR   PASSED");
+    shifts::shift_left_zero_page();
+    shifts::shift_left_zero_page_x();
+    println!("ASL ZERO PAGE     PASSED");
+    shifts::shift_left_absolute();
+    shifts::shift_left_absolute_x();
+    println!("ASL ABSOLUTE      PASSED");
+    println!("  LEFT SHIFT FULL PASS \n");
+
+    shifts::shift_right_accumulator();
+    println!("LSR ACCUMULATOR   PASSED");
+    shifts::shift_right_zero_page();
+    shifts::shift_right_zero_page_x();
+    println!("LSR ZERO PAGE     PASSED");
+    shifts::shift_right_absolute();
+    shifts::shift_right_absolute_x();
+    println!("LSR ABSOLUTE      PASSED");
+    println!("  RIGHT SHIFT FULL PASS \n");
 }

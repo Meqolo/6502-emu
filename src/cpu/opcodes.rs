@@ -172,4 +172,16 @@ pub const CPY_IMMEDIATE: u8 = 0xC0;
 pub const CPY_ZERO_PAGE: u8 = 0xC4;
 pub const CPY_ABSOLUTE: u8 = 0xCC;
 
+pub const ASL_ACCUMULATOR: u8 = 0x0A;
+pub const ASL_ZERO_PAGE: u8 = 0x06;
+pub const ASL_ZERO_PAGE_X: u8 = 0x16;
+pub const ASL_ABSOLUTE: u8 = 0x0E;
+pub const ASL_ABSOLUTE_X: u8 = 0x1E;
+
+pub const LSR_ACCUMULATOR: u8 = 0x4A;
+pub const LSR_ZERO_PAGE: u8 = 0x46;
+pub const LSR_ZERO_PAGE_X: u8 = 0x56;
+pub const LSR_ABSOLUTE: u8 = 0x4E;
+pub const LSR_ABSOLUTE_X: u8 = 0x5E;
+
 pub const NOP: u8 = 0xEA;

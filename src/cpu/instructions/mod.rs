@@ -6,5 +6,6 @@ pub mod increment;
 pub mod jumps;
 pub mod logical;
 pub mod registers;
+pub mod shifts;
 pub mod stackops;
 pub mod transfers;

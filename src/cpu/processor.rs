@@ -3,6 +3,7 @@ use super::instructions::arithmetic::add::AddWithCarry;
 use super::instructions::arithmetic::compare::Compare;
 use super::instructions::arithmetic::subtract::SubtractWithCarry;
 use super::instructions::branches::Branches;
+use super::instructions::shifts::Shifts;
 use crate::cpu;
 use crate::mem::*;
 use std::fmt;
@@ -312,6 +313,18 @@ impl Functions for Processor {
                 SBC_ZERO_PAGE_X => self.sbc_zero_page(memory, Some(RegisterX)),
                 SBC_INDIRECT_X => self.sbc_indirect_x(memory),
                 SBC_INDIRECT_Y => self.sbc_indirect_y(memory),
+
+                ASL_ACCUMULATOR => self.shift_left(memory, ASL_ACCUMULATOR),
+                ASL_ZERO_PAGE => self.shift_left(memory, ASL_ZERO_PAGE),
+                ASL_ZERO_PAGE_X => self.shift_left(memory, ASL_ZERO_PAGE_X),
+                ASL_ABSOLUTE => self.shift_left(memory, ASL_ABSOLUTE),
+                ASL_ABSOLUTE_X => self.shift_left(memory, ASL_ABSOLUTE_X),
+
+                LSR_ACCUMULATOR => self.shift_right(memory, LSR_ACCUMULATOR),
+                LSR_ZERO_PAGE => self.shift_right(memory, LSR_ZERO_PAGE),
+                LSR_ZERO_PAGE_X => self.shift_right(memory, LSR_ZERO_PAGE_X),
+                LSR_ABSOLUTE => self.shift_right(memory, LSR_ABSOLUTE),
+                LSR_ABSOLUTE_X => self.shift_right(memory, LSR_ABSOLUTE_X),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
