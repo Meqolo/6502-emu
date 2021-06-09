@@ -184,4 +184,16 @@ pub const LSR_ZERO_PAGE_X: u8 = 0x56;
 pub const LSR_ABSOLUTE: u8 = 0x4E;
 pub const LSR_ABSOLUTE_X: u8 = 0x5E;
 
+pub const ROL_ACCUMULATOR: u8 = 0x2A;
+pub const ROL_ZERO_PAGE: u8 = 0x26;
+pub const ROL_ZERO_PAGE_X: u8 = 0x36;
+pub const ROL_ABSOLUTE: u8 = 0x2E;
+pub const ROL_ABSOLUTE_X: u8 = 0x3E;
+
+pub const ROR_ACCUMULATOR: u8 = 0x6A;
+pub const ROR_ZERO_PAGE: u8 = 0x66;
+pub const ROR_ZERO_PAGE_X: u8 = 0x76;
+pub const ROR_ABSOLUTE: u8 = 0x6E;
+pub const ROR_ABSOLUTE_X: u8 = 0x7E;
+
 pub const NOP: u8 = 0xEA;

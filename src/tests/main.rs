@@ -17,6 +17,7 @@ use tests::increment;
 use tests::jumps;
 use tests::logical;
 use tests::programs::test::*;
+use tests::rotates;
 use tests::shifts;
 use tests::stackops;
 use tests::transfers;
@@ -331,4 +332,13 @@ pub fn run() {
     shifts::shift_right_absolute_x();
     println!("LSR ABSOLUTE      PASSED");
     println!("  RIGHT SHIFT FULL PASS \n");
+
+    rotates::rotate_left_accumulator();
+    println!("ROL ACCUMULATOR   PASSED");
+    rotates::rotate_left_zero_page();
+    rotates::rotate_left_zero_page_x();
+    println!("ROL ZERO PAGE     PASSED");
+    rotates::rotate_left_absolute();
+    rotates::rotate_left_absolute_x();
+    println!("ROL ABSOLUTE      PASSED");
 }

@@ -9,6 +9,7 @@ pub mod logical;
 pub mod main;
 pub mod programs;
 pub mod registers;
+pub mod rotates;
 pub mod shifts;
 pub mod stackops;
 pub mod transfers;

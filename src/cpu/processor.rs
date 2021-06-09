@@ -326,6 +326,12 @@ impl Functions for Processor {
                 LSR_ABSOLUTE => self.shift_right(memory, LSR_ABSOLUTE),
                 LSR_ABSOLUTE_X => self.shift_right(memory, LSR_ABSOLUTE_X),
 
+                ROL_ACCUMULATOR => self.rotate_left(memory, ROL_ACCUMULATOR),
+                ROL_ZERO_PAGE => self.rotate_left(memory, ROL_ZERO_PAGE),
+                ROL_ZERO_PAGE_X => self.rotate_left(memory, ROL_ZERO_PAGE_X),
+                ROL_ABSOLUTE => self.rotate_left(memory, ROL_ABSOLUTE),
+                ROL_ABSOLUTE_X => self.rotate_left(memory, ROL_ABSOLUTE_X),
+
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
                     return (origin_cycles as i64 - 1) - self.cycles as i64;
