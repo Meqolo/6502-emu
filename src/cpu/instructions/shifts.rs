@@ -142,21 +142,22 @@ impl Shifts for Processor {
         let mut address: Option<u16> = None;
 
         match opcode {
-            LSR_ACCUMULATOR => {
+            ROR_ACCUMULATOR => {
                 old_carry = fetch_bit(self.accumulator, 0);
                 result = self.accumulator >> 1;
+                result = set_bit(result, 7, self.fetch_status(CarryFlag));
                 self.accumulator = result;
             }
-            LSR_ZERO_PAGE => {
+            ROR_ZERO_PAGE => {
                 address = Some(self.addr_zero_page(memory, None));
             }
-            LSR_ZERO_PAGE_X => {
+            ROR_ZERO_PAGE_X => {
                 address = Some(self.addr_zero_page(memory, Some(RegisterX)));
             }
-            LSR_ABSOLUTE => {
+            ROR_ABSOLUTE => {
                 address = Some(self.addr_absolute(memory, None));
             }
-            LSR_ABSOLUTE_X => {
+            ROR_ABSOLUTE_X => {
                 address = Some(self.addr_absolute(memory, Some(RegisterX)));
             }
             _ => {}

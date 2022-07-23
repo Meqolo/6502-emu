@@ -113,15 +113,16 @@ pub fn rotate_right_accumulator() -> () {
 
     memory.data[0xFF00] = ROR_ACCUMULATOR;
 
-    processor.accumulator = 0b01;
+    processor.accumulator = 0b0;
+    processor.set_status(CarryFlag, true);
     processor.cycles = EXPECTED_CYCLES;
     let cycles = processor.execute(&mut memory);
 
-    verify_register(&processor, Accumulator, 0b0);
+    verify_register(&processor, Accumulator, 0b10000000);
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
-    verify_flag(&processor, CarryFlag, true);
-    verify_flag(&processor, ZeroFlag, true);
-    verify_flag(&processor, NegativeFlag, false);
+    verify_flag(&processor, CarryFlag, false);
+    verify_flag(&processor, ZeroFlag, false);
+    verify_flag(&processor, NegativeFlag, true);
 }
 
 pub fn rotate_right_zero_page() -> () {

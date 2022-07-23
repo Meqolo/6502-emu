@@ -16,15 +16,33 @@ use tests::flags;
 use tests::increment;
 use tests::jumps;
 use tests::logical;
-use tests::programs::test::*;
 use tests::rotates;
 use tests::shifts;
 use tests::stackops;
 use tests::transfers;
 
+use tests::programs::{functional_test::*, test::*};
+
+use std::io;
+
 pub fn run_programs() {
     println!("6502 EXAMPLE PROGRAMS");
-    test_program();
+    println!("Please enter a key depending on which you wish to run: ");
+    println!("1) 6502 Test Program");
+    println!("2) 6502 Functional Test");
+    let mut stdin_buffer = String::new();
+    match io::stdin().read_line(&mut stdin_buffer) {
+        Ok(_n) => {
+            println!("\n\n");
+            if stdin_buffer.contains("1") {
+                test_program();
+            } else {
+                functional_program_test()
+            }
+        }
+        Err(_error) => {}
+    }
+
     println!("TEST PROGRAM      PASSED");
 }
 
@@ -341,4 +359,15 @@ pub fn run() {
     rotates::rotate_left_absolute();
     rotates::rotate_left_absolute_x();
     println!("ROL ABSOLUTE      PASSED");
+    println!("  ROTATE LEFT FULL PASS \n");
+
+    rotates::rotate_right_accumulator();
+    println!("ROR ACCUMULATOR   PASSED");
+    rotates::rotate_right_zero_page();
+    rotates::rotate_right_zero_page_x();
+    println!("ROR ZERO PAGE     PASSED");
+    rotates::rotate_right_absolute();
+    rotates::rotate_right_absolute_x();
+    println!("ROR ABSOLUTE      PASSED");
+    println!("  ROTATE RIGHT FULL PASS \n");
 }
