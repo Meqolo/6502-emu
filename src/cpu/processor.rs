@@ -141,6 +141,7 @@ impl Functions for Processor {
 
         while self.cycles > 0 {
             let instruction: u8 = self.fetch_byte(&memory);
+            // println!("{:X} | INS: {:#X}", self, instruction);
 
             match instruction {
                 LDA_IMMEDIATE => self.load_immediate(memory, Accumulator),

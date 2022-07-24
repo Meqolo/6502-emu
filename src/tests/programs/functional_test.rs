@@ -4103,14 +4103,19 @@ const TEST_PROGRAM: [u8; 65526] = [
 pub fn functional_program_test() -> () {
     let (mut memory, mut processor) = setup();
 
-    processor.program_counter = processor.load_program(&mut memory, &TEST_PROGRAM);
+    processor.load_program(&mut memory, &TEST_PROGRAM);
+    processor.program_counter = 0x03FF; // Program starts at 0x0400 rather than 0x0000
+    println!("AAA {}", processor.program_counter);
 
-    let mut clock = 9999999;
+    let mut clock = 1000;
 
     while clock > 0 {
-        processor.cycles = 20;
+        processor.cycles = 1000;
         clock -= processor.execute(&mut memory);
     }
 
-    println!("{:X}", processor);
+    println!(
+        "{:X} | {:X}",
+        processor, memory.data[processor.program_counter as usize]
+    );
 }
