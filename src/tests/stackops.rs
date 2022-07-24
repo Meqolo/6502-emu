@@ -141,16 +141,16 @@ pub fn pull_status_from_stack() -> () {
     processor.cycles = EXPECTED_CYCLES;
 
     memory.data[0xFF00] = PLP;
-    processor.status = 0b00100000; // The 5th bit should remain set
+    processor.status = 0xFF; // The 5th bit should remain set
     memory.data[0x1FF] = 0b01010001; // Sets highest value on stack (0xFF) to 0xFF
 
-    // Status should be  0b01100001 as end result - the 4th and 5th bit of the status should be unchanged
+    // Status should be  0b01000001 as end result - the 4th and 5th bit of the status should be unchanged
 
     let cycles = processor.execute(&mut memory);
 
     assert_eq!(
-        processor.status, 0b01100001,
-        "Processor status is not equal to 0b01100001" // Processor status is set to 0xFF, with the 4th and 5th bit remaining unchanged from previously
+        processor.status, 0b01000001,
+        "Processor status is not equal to 0b01000001" // Processor status is set to 0xFF, with the 4th and 5th bit remaining unchanged from previously
     );
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
 }

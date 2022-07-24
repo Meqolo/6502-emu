@@ -1,10 +1,9 @@
-use std::process;
-
 use super::common::*;
 use crate::cpu;
+use crate::fetch_bit;
+use crate::set_bit;
 
 use cpu::opcodes::ProcessorStatus::*;
-use cpu::opcodes::Registers::*;
 use cpu::opcodes::*;
 use cpu::processor::Functions;
 
@@ -19,7 +18,9 @@ pub fn force_interrupt() -> () {
     memory.data[0xFFFF] = 0x80;
 
     let original_stack_pointer: u16 = processor.stack_pointer.into();
-    let original_processor_status = processor.status;
+    let mut original_processor_status = processor.status;
+    original_processor_status = set_bit(original_processor_status, 4, true);
+    original_processor_status = set_bit(original_processor_status, 5, true);
     let cycles = processor.execute(&mut memory);
 
     verify_program_counter(&processor, 0x8000);
@@ -30,6 +31,7 @@ pub fn force_interrupt() -> () {
         (0x100 | original_stack_pointer) - 2,
         original_processor_status,
     );
+
     verify_cycles(cycles, EXPECTED_CYCLES as i64);
     verify_flag(&processor, BreakCommand, true);
 }

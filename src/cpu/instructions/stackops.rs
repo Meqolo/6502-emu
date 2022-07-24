@@ -56,14 +56,10 @@ impl StackOperations for Processor {
     }
 
     fn plp(&mut self, memory: &mut Memory) -> () {
-        /*
-            When setting the processor status from the stack, the 4th and 5th bit are ignored
-                (and remain the same as  in the current processor status).
-            Therefore, if the status = 0b00100000, and the stack = 0b01010001, then the status will be set to 0b01100001
-        */
+        /* When setting the processor status from the stack, the 4th and 5th bit (break and unused) are cleared */
         let mut status_to_set = self.pop_byte_from_stack(memory);
-        status_to_set = set_bit(status_to_set, 4, fetch_bit(self.status, 4));
-        status_to_set = set_bit(status_to_set, 5, fetch_bit(self.status, 5));
+        status_to_set = set_bit(status_to_set, 4, false);
+        status_to_set = set_bit(status_to_set, 5, false);
 
         self.status = status_to_set;
     }
