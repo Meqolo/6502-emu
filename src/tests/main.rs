@@ -19,6 +19,7 @@ use tests::logical;
 use tests::rotates;
 use tests::shifts;
 use tests::stackops;
+use tests::system;
 use tests::transfers;
 
 use tests::programs::{functional_test::*, test::*};
@@ -370,4 +371,9 @@ pub fn run() {
     rotates::rotate_right_absolute_x();
     println!("ROR ABSOLUTE      PASSED");
     println!("  ROTATE RIGHT FULL PASS \n");
+
+    system::force_interrupt();
+    println!("BRK               PASSED");
+    system::return_from_interrupt();
+    println!("RTI               PASSED");
 }

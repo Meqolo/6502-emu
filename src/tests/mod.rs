@@ -12,4 +12,5 @@ pub mod registers;
 pub mod rotates;
 pub mod shifts;
 pub mod stackops;
+pub mod system;
 pub mod transfers;

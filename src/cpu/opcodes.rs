@@ -197,3 +197,5 @@ pub const ROR_ABSOLUTE: u8 = 0x6E;
 pub const ROR_ABSOLUTE_X: u8 = 0x7E;
 
 pub const NOP: u8 = 0xEA;
+pub const BRK: u8 = 0x00;
+pub const RTI: u8 = 0x40;

@@ -17,7 +17,7 @@ pub trait Jumps {
 impl Jumps for Processor {
     fn jsr(&mut self, memory: &mut Memory) -> () {
         let sub_addr: u16 = self.fetch_word(memory);
-        self.push_pc_to_stack(memory);
+        self.push_pc_minus_one_to_stack(memory);
         self.program_counter = sub_addr;
 
         self.decrement_cycles(1);

@@ -6,6 +6,7 @@ use functions::byte::*;
 use functions::word::*;
 
 pub trait StackFunctions {
+    fn push_pc_minus_one_to_stack(&mut self, memory: &mut Memory) -> ();
     fn push_pc_to_stack(&mut self, memory: &mut Memory) -> ();
     fn push_byte_to_stack(&mut self, memory: &mut Memory, value: u8) -> ();
     fn stack_pointer_to_address(&mut self) -> u16;
@@ -15,6 +16,12 @@ pub trait StackFunctions {
 
 impl StackFunctions for Processor {
     fn push_pc_to_stack(&mut self, memory: &mut Memory) -> () {
+        let sp_addr: u16 = self.stack_pointer_to_address() - 1;
+        self.write_word(memory, self.program_counter, sp_addr);
+        self.stack_pointer -= 2;
+    }
+
+    fn push_pc_minus_one_to_stack(&mut self, memory: &mut Memory) -> () {
         let sp_addr: u16 = self.stack_pointer_to_address() - 1;
         self.write_word(memory, self.program_counter - 1, sp_addr);
         self.stack_pointer -= 2;

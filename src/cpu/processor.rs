@@ -4,6 +4,7 @@ use super::instructions::arithmetic::compare::Compare;
 use super::instructions::arithmetic::subtract::SubtractWithCarry;
 use super::instructions::branches::Branches;
 use super::instructions::shifts::Shifts;
+use super::instructions::system::System;
 use crate::cpu;
 use crate::mem::*;
 use std::fmt;
@@ -337,6 +338,9 @@ impl Functions for Processor {
                 ROR_ZERO_PAGE_X => self.rotate_right(memory, ROR_ZERO_PAGE_X),
                 ROR_ABSOLUTE => self.rotate_right(memory, ROR_ABSOLUTE),
                 ROR_ABSOLUTE_X => self.rotate_right(memory, ROR_ABSOLUTE_X),
+
+                BRK => self.force_interrupt(memory),
+                RTI => self.return_from_interrupt(memory),
 
                 _ => {
                     println!("Unknown instruction {:#X}", instruction);
