@@ -5,6 +5,7 @@ pub enum ProcessorStatus {
     InterruptDisable,
     DecimalMode,
     BreakCommand,
+    UnusedFlag,
     OverflowFlag,
     NegativeFlag,
 }

@@ -1,5 +1,7 @@
 use super::registers::load::LoadRegister;
 use crate::cpu;
+use crate::mem::fetch_bit;
+use crate::mem::set_bit;
 use crate::mem::Memory;
 
 use cpu::functions::stack::*;
@@ -36,7 +38,16 @@ impl StackOperations for Processor {
     }
 
     fn php(&mut self, memory: &mut Memory) -> () {
-        self.push_byte_to_stack(memory, self.status);
+        /*
+            When pushing processor status to the stack, the byte that is pushed is not an exact copy of the status.
+            The 4th bit pushed (break flag) will be set to 1 (true)
+            The 5th bit pushed (unused flag) will be set to 1 (true)
+        */
+        let mut status_to_push = self.status;
+        status_to_push = set_bit(status_to_push, 4, true);
+        status_to_push = set_bit(status_to_push, 5, true);
+
+        self.push_byte_to_stack(memory, status_to_push);
     }
 
     fn pla(&mut self, memory: &mut Memory) -> () {
@@ -45,6 +56,15 @@ impl StackOperations for Processor {
     }
 
     fn plp(&mut self, memory: &mut Memory) -> () {
-        self.status = self.pop_byte_from_stack(memory);
+        /*
+            When setting the processor status from the stack, the 4th and 5th bit are ignored
+                (and remain the same as  in the current processor status).
+            Therefore, if the status = 0b00100000, and the stack = 0b01010001, then the status will be set to 0b01100001
+        */
+        let mut status_to_set = self.pop_byte_from_stack(memory);
+        status_to_set = set_bit(status_to_set, 4, fetch_bit(self.status, 4));
+        status_to_set = set_bit(status_to_set, 5, fetch_bit(self.status, 5));
+
+        self.status = status_to_set;
     }
 }

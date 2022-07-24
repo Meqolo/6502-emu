@@ -95,6 +95,7 @@ impl Functions for Processor {
             InterruptDisable => self.status = set_bit(self.status, 2, value),
             DecimalMode => self.status = set_bit(self.status, 3, value),
             BreakCommand => self.status = set_bit(self.status, 4, value),
+            UnusedFlag => self.status = set_bit(self.status, 5, value),
             OverflowFlag => self.status = set_bit(self.status, 6, value),
             NegativeFlag => self.status = set_bit(self.status, 7, value),
         }
@@ -107,6 +108,7 @@ impl Functions for Processor {
             InterruptDisable => return fetch_bit(self.status, 2),
             DecimalMode => return fetch_bit(self.status, 3),
             BreakCommand => return fetch_bit(self.status, 4),
+            UnusedFlag => return fetch_bit(self.status, 5),
             OverflowFlag => return fetch_bit(self.status, 6),
             NegativeFlag => return fetch_bit(self.status, 7),
         }
