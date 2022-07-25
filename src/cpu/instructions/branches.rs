@@ -10,8 +10,8 @@ pub trait Branches {
 
 impl Branches for Processor {
     fn branch(&mut self, memory: &mut Memory, condition: bool) -> () {
+        let jump_offset: u8 = self.fetch_byte(memory);
         if condition == true {
-            let jump_offset: u8 = self.fetch_byte(memory);
             let original_pc = self.program_counter.clone();
             let twos_comp: i8 = jump_offset as i8;
 
