@@ -17,7 +17,7 @@ pub trait System {
 
 impl System for Processor {
     fn force_interrupt(&mut self, memory: &mut Memory) -> () {
-        self.push_pc_to_stack(memory);
+        self.push_pc_plus_one_to_stack(memory);
         let mut processor_status = self.status;
         processor_status = set_bit(processor_status, 4, true);
         processor_status = set_bit(processor_status, 5, true);

@@ -25,7 +25,7 @@ pub fn force_interrupt() -> () {
 
     verify_program_counter(&processor, 0x8000);
     verify_memory(&memory, (0x100 | original_stack_pointer) - 0, 0xFF);
-    verify_memory(&memory, (0x100 | original_stack_pointer) - 1, 0x01);
+    verify_memory(&memory, (0x100 | original_stack_pointer) - 1, 0x02); // BRK increments PC by 2 despite only using 1 byte
     verify_memory(
         &memory,
         (0x100 | original_stack_pointer) - 2,
@@ -51,7 +51,7 @@ pub fn return_from_interrupt() -> () {
     let original_processor_status = processor.status;
     let cycles = processor.execute(&mut memory);
 
-    verify_program_counter(&processor, 0xFF01);
+    verify_program_counter(&processor, 0xFF02);
     assert_eq!(
         processor.stack_pointer as u16, original_stack_pointer,
         "Stack pointer remains modified"
