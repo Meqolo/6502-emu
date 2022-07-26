@@ -32,6 +32,11 @@ impl Jumps for Processor {
     fn jump_absolute(&mut self, memory: &mut Memory) -> () {
         let address: u16 = self.addr_absolute(memory, None);
         self.program_counter = address;
+        // IS JUMP OFFSET FORWARD BY 2???
+        println!(
+            "NEW PC: {:X} | DATA AT PC: {:X}",
+            self.program_counter, &memory.data[self.program_counter as usize]
+        );
     }
 
     fn jump_indirect(&mut self, memory: &mut Memory) -> () {
